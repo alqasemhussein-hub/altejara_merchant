@@ -1,0 +1,1 @@
+enum OtpMethod { whatsapp, email }
