@@ -9,35 +9,35 @@ import 'package:techara_merchant/src/main/mini_apps/news/domain/entities/news_te
 
 class LocalDatabase {
   static Future<void> iniLocalDataBase() async {
-    await Hive.openBox('super_app_halla_local_data');
+    await Hive.openBox('altejara_merchant_key_storage');
   }
 
   static Future<int> clearData() {
-    return Hive.box('super_app_halla_local_data').clear();
+    return Hive.box('altejara_merchant_key_storage').clear();
   }
 
   static Future<void> saveData(String key, dynamic value) {
-    return Hive.box('super_app_halla_local_data').put(key, value);
+    return Hive.box('altejara_merchant_key_storage').put(key, value);
   }
 
   static T getData<T>(String key) {
-    return Hive.box('super_app_halla_local_data').get(key) as T;
+    return Hive.box('altejara_merchant_key_storage').get(key) as T;
   }
 
   static Future<void> deleteData(String key) {
-    return Hive.box('super_app_halla_local_data').delete(key);
+    return Hive.box('altejara_merchant_key_storage').delete(key);
   }
 
   static bool containsKey(String key) {
-    return Hive.box('super_app_halla_local_data').containsKey(key);
+    return Hive.box('altejara_merchant_key_storage').containsKey(key);
   }
 
   static Future<void> clearKey(String key) {
-    return Hive.box('super_app_halla_local_data').delete(key);
+    return Hive.box('altejara_merchant_key_storage').delete(key);
   }
 
   static Future<void> clearAll() {
-    return Hive.box('super_app_halla_local_data').clear();
+    return Hive.box('altejara_merchant_key_storage').clear();
   }
 
   static Future<void> saveNewsTextStyle(NewsTextStyle style) {

@@ -1,13 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:techara_merchant/src/core/style/theme/theme_provider.dart';
-import 'package:techara_merchant/src/main/home/presentation/widgets/banner_widget.dart';
-import 'package:techara_merchant/src/main/home/presentation/widgets/bottom_search.dart';
-import 'package:techara_merchant/src/main/home/presentation/widgets/sevices_grid.dart';
-import 'package:techara_merchant/src/main/home/presentation/widgets/weather_widget.dart';
 
 class MainPage extends StatefulWidget {
-  const MainPage({Key? key}) : super(key: key);
+  const MainPage({super.key});
 
   @override
   State<MainPage> createState() => _MainPageState();
@@ -78,7 +74,6 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const WeatherWidget(),
                 const Spacer(),
                 CircleAvatar(
                   radius: 24,
@@ -101,23 +96,14 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
           context.read<AppThemeProvider>().toggleTheme();
         },
       ),
-      bottomNavigationBar: BottomSearch(
-        textTheme: textTheme,
-        colorScheme: colorScheme,
-      ),
+
       body: FadeTransition(
         opacity: _fadeAnimation,
         child: SlideTransition(
           position: _slideAnimation,
           child: ListView(
             padding: const EdgeInsets.all(18),
-            children: const [
-              BannerWidget(),
-
-              SizedBox(height: 18),
-              MiniAppsPage(),
-              SizedBox(height: 200),
-            ],
+            children: const [SizedBox(height: 18), SizedBox(height: 200)],
           ),
         ),
       ),
