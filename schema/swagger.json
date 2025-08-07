@@ -155,46 +155,35 @@
         }
       }
     },
-    "/api/auth/login": {
-      "post": {
-        "tags": [
-          "Auth"
-        ],
-        "parameters": [
-          {
-            "name": "whatsapp",
-            "in": "query",
-            "schema": {
-              "type": "boolean"
-            }
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/LoginForm"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/LoginForm"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/LoginForm"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "OK"
+   "/api/auth/login": {
+  "post": {
+    "tags": ["Auth"],
+    "summary": "Login",
+    "requestBody": {
+      "required": true,
+      "content": {
+        "application/json": {
+          "schema": {
+            "$ref": "#/components/schemas/LoginForm"
           }
         }
       }
     },
+    "responses": {
+      "200": {
+        "description": "Successful login",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/LoginResponse"
+            }
+          }
+        }
+      }
+    }
+  }
+}
+,
     "/api/Auth/verify-2fa": {
       "post": {
         "tags": [
@@ -2269,24 +2258,43 @@
         },
         "additionalProperties": false
       },
-      "LoginForm": {
-        "required": [
-          "Password"
-        ],
-        "type": "object",
-        "properties": {
-          "Password": {
-            "maxLength": 16,
-            "minLength": 4,
-            "type": "string"
-          },
-          "AzbaraNum": {
-            "type": "string",
-            "nullable": true
-          }
-        },
-        "additionalProperties": false
-      },
+     "LoginForm": {
+  "type": "object",
+  "properties": {
+    "azbaraNum": {
+      "type": "string"
+    },
+    "password": {
+      "type": "string"
+    }
+  },
+  "required": ["azbaraNum", "password"]
+},
+"LoginResponse": {
+  "type": "object",
+  "properties": {
+    "token": {
+      "type": "string"
+    },
+    "user": {
+      "$ref": "#/components/schemas/User"
+    }
+  },
+  "required": ["token", "user"]
+},
+"User": {
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "integer"
+    },
+    "name": {
+      "type": "string"
+    }
+  },
+  "required": ["id", "name"]
+}
+,
       "RegisterForm": {
         "required": [
           "Email",

@@ -20,7 +20,7 @@ extension GetItInjectableX on _i174.GetIt {
     _i526.EnvironmentFilter? environmentFilter,
   }) {
     final gh = _i526.GetItHelper(this, environment, environmentFilter);
-    gh.lazySingleton<_i555.DioClient>(() => _i555.DioClient());
+    gh.lazySingleton<_i555.ApiClient>(() => _i555.ApiClient());
     return this;
   }
 }

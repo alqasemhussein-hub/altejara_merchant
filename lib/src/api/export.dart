@@ -2,6 +2,15 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, unused_import
 
+// Clients
+export 'archive/archive_client.dart';
+export 'auth/auth_client.dart';
+export 'certifecate/certifecate_client.dart';
+export 'file/file_client.dart';
+export 'governurates/governurates_client.dart';
+export 'home/home_client.dart';
+export 'payment/payment_client.dart';
+export 'pdf/pdf_client.dart';
 // Data classes
 export 'models/certifecate_form.dart';
 export 'models/change_password_form.dart';
@@ -16,3 +25,6 @@ export 'models/tajer_filter.dart';
 export 'models/user_activate_form.dart';
 export 'models/user_order_form.dart';
 export 'models/user_validate_form.dart';
+// Root client
+export 'rest_client.dart';
+

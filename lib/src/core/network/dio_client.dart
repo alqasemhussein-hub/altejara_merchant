@@ -1,8 +1,9 @@
 import 'dart:convert';
-import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:injectable/injectable.dart';
+import 'package:techara_merchant/src/api/rest_client.dart';
+import 'package:techara_merchant/src/core/const/variable.dart';
 import 'package:techara_merchant/src/core/extenstion/general.dart';
 import 'package:techara_merchant/src/core/network/data_state.dart';
 import 'package:techara_merchant/src/core/network/dio_interceptor.dart';
@@ -11,24 +12,26 @@ import 'package:techara_merchant/src/core/network/error_model.dart';
 import 'package:techara_merchant/src/core/network/network_handle_error.dart';
 
 @lazySingleton
-class DioClient {
-  Dio instance(String? url) {
+class ApiClient {
+  RestClient instance(String? url) {
     // final token = LocalDatabase.getToken();
     var dio = Dio();
 
-    dio.options.headers['Accept'] = 'application/json';
-    dio.options.headers['Content-Type'] = 'application/json';
+    // dio.options.headers['Accept'] = 'application/json';
+    // dio.options.headers['Content-Type'] = 'application/json';
 
-    dio.options.headers['app-platform-type'] = Platform.isAndroid
-        ? "ANDROID"
-        : Platform.isIOS
-        ? "IOS"
-        : "OTHER";
+    // dio.options.headers['app-platform-type'] = Platform.isAndroid
+    //     ? "ANDROID"
+    //     : Platform.isIOS
+    //     ? "IOS"
+    //     : "OTHER";
 
     dio.interceptors.add(DioInterceptor(dio));
     dio.interceptors.add(DioLogger());
 
-    return dio;
+    final restClient = RestClient(dio, baseUrl: baseUrl);
+
+    return restClient;
   }
 }
 
@@ -38,12 +41,12 @@ extension ApiCallHandler<T> on Future<Response<dynamic>> {
   ) async {
     try {
       final data = await this;
-      kdp(name: "datafadf", msg: jsonEncode(data.data), c: "gr");
-      return DataSuccess(dataType(data.data["data"]));
+      kdp(name: 'datafadf', msg: jsonEncode(data.data), c: 'gr');
+      return DataSuccess(dataType(data.data['data']));
     } on DioException catch (dioError) {
       return NetworkHandler.getDataFailed<T>(dioError);
     } catch (error) {
-      kdp(name: "Exaption", msg: error, c: "r");
+      kdp(name: 'Exaption', msg: error, c: 'r');
 
       return DataFailed(InternetConnectionError());
     }
@@ -56,7 +59,7 @@ extension ApiCallHandler<T> on Future<Response<dynamic>> {
       final data = await this;
       //   kdp(name: "datafadf", msg: jsonEncode(data.data), c: "gr");
 
-      return DataSuccess(dataType(data.data["data"]));
+      return DataSuccess(dataType(data.data['data']));
     } on DioException catch (dioError) {
       return NetworkHandler.getDataFailed<T>(dioError);
     } catch (error) {
@@ -85,11 +88,11 @@ extension ApiCallHandler<T> on Future<Response<dynamic>> {
     try {
       final data = await this;
       // L.success(name: "s", msg: data.data.toString());
-      return DataSuccess(dataType(data.data["data"] as RT));
+      return DataSuccess(dataType(data.data['data'] as RT));
     } on DioException catch (dioError) {
       return NetworkHandler.getDataFailed<T>(dioError);
     } catch (error) {
-      kdp(name: "Exaption: ", msg: error, c: "r");
+      kdp(name: 'Exaption: ', msg: error, c: 'r');
 
       return DataFailed(InternetConnectionError());
     }
