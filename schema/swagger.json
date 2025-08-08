@@ -159,6 +159,15 @@
   "post": {
     "tags": ["Auth"],
     "summary": "Login",
+    "parameters": [
+          {
+            "name": "whatsapp",
+            "in": "query",
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
     "requestBody": {
       "required": true,
       "content": {
@@ -2273,14 +2282,27 @@
 "LoginResponse": {
   "type": "object",
   "properties": {
-    "token": {
+    "error": {
+       "$ref": "#/components/schemas/LoginError"
+    }
+   
+  }
+
+},
+"LoginError": {
+  "type": "object",
+  "properties": {
+    "statusCode": {
+       "type": "integer"
+    },
+    "message": {
       "type": "string"
     },
-    "user": {
-      "$ref": "#/components/schemas/User"
+    "content": {
+      "type": "string"
     }
-  },
-  "required": ["token", "user"]
+
+}
 },
 "User": {
   "type": "object",

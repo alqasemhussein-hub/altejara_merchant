@@ -1,11 +1,5 @@
-import 'dart:ui';
-
 import 'package:hive/hive.dart';
-import 'package:provider/provider.dart';
-import 'package:techara_merchant/src/core/const/variable.dart';
-import 'package:techara_merchant/src/core/style/theme/theme_provider.dart';
-import 'package:techara_merchant/src/main/auth/domain/user_entity.dart';
-import 'package:techara_merchant/src/main/mini_apps/news/domain/entities/news_text_style.dart';
+import 'package:techara_merchant/api/models/verify_2fa_response.dart';
 
 class LocalDatabase {
   static Future<void> iniLocalDataBase() async {
@@ -21,7 +15,16 @@ class LocalDatabase {
   }
 
   static T getData<T>(String key) {
-    return Hive.box('altejara_merchant_key_storage').get(key) as T;
+    final value = Hive.box('altejara_merchant_key_storage').get(key);
+
+    if (value is Map && T.toString().startsWith('Map<String,')) {
+      // Convert keys to String for safety
+      final converted = value.map((k, v) => MapEntry(k.toString(), v));
+
+      return converted as T;
+    }
+
+    return value as T;
   }
 
   static Future<void> deleteData(String key) {
@@ -40,24 +43,6 @@ class LocalDatabase {
     return Hive.box('altejara_merchant_key_storage').clear();
   }
 
-  static Future<void> saveNewsTextStyle(NewsTextStyle style) {
-    return saveData('news_text_style', style.tojson());
-  }
-
-  static NewsTextStyle getNewsTextStyle() {
-    final json = getData<Map<dynamic, dynamic>?>('news_text_style');
-    if (json == null) {
-      return NewsTextStyle(
-        scale: 1.0,
-        isBold: false,
-        isDarkMode:
-            navigatorKey.currentContext!.read<AppThemeProvider>().brightness ==
-            Brightness.dark,
-      );
-    }
-    return NewsTextStyle.fromJson(json);
-  }
-
   static Future<void> setAuth() {
     return saveData('auth_app_key', true);
   }
@@ -66,15 +51,15 @@ class LocalDatabase {
     return getData<bool?>('auth_app_key') ?? false;
   }
 
-  static Future<void> saveUserEntity(UserEntity userEntity) {
+  static Future<void> saveUserEntity(Verify2FaResponse userEntity) {
     return saveData('use_entity_key', userEntity.toJson());
   }
 
-  static UserEntity? getUserEntity() {
-    final data = getData<Map<dynamic, dynamic>?>('use_entity_key');
+  static Verify2FaResponse? getUserEntity() {
+    final data = getData<Map<String, dynamic>?>('use_entity_key');
     if (data == null) {
       return null;
     }
-    return UserEntity.fromJson(data);
+    return Verify2FaResponse.fromJson(data);
   }
 }

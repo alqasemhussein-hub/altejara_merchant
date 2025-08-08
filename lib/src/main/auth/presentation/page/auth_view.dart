@@ -1,30 +1,42 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
+import 'package:techara_merchant/src/core/enums/general.dart';
+import 'package:techara_merchant/src/core/snackbar/snackbar.dart';
 import 'package:techara_merchant/src/core/widgets/custom_text_field.dart';
 import 'package:techara_merchant/src/core/widgets/logo_animation.dart';
+import 'package:techara_merchant/src/main/auth/presentation/cubit/bloc/otp_bloc.dart';
+import 'package:techara_merchant/src/main/auth/presentation/cubit/login/login_cubit.dart';
+import 'package:techara_merchant/src/main/auth/presentation/page/otp_view.dart';
+import 'package:techara_merchant/src/main/auth/presentation/widget/login_button.dart';
 
-class SignUpPage extends StatefulWidget {
-  const SignUpPage({super.key});
+class LoginPage extends StatefulWidget {
+  const LoginPage({super.key});
 
   @override
-  State<SignUpPage> createState() => _SignUpPageState();
+  State<LoginPage> createState() => _LoginPageState();
 }
 
-class _SignUpPageState extends State<SignUpPage> {
-  final TextEditingController _emailController = TextEditingController();
+class _LoginPageState extends State<LoginPage> {
+  final TextEditingController _classNumberController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  late LoginCubit _loginCubit;
+
+  // Radio button selection
+  String _selectedOtpType = '';
 
   @override
   void initState() {
     super.initState();
-    _emailController.text = "و3386";
-    _passwordController.text = "jNh&8PvWv43j";
+    _classNumberController.text = 'و3386';
+    _passwordController.text = '@vytHNTphbqZ';
+    _loginCubit = context.read<LoginCubit>();
   }
 
   @override
   void dispose() {
-    _emailController.dispose();
+    _classNumberController.dispose();
     _passwordController.dispose();
     super.dispose();
   }
@@ -34,94 +46,74 @@ class _SignUpPageState extends State<SignUpPage> {
     final theme = Theme.of(context);
     final textTheme = theme.textTheme;
     final colorScheme = theme.colorScheme;
-    return Scaffold(
-      body: Form(
-        key: _formKey,
-        child: Container(
-          height: double.infinity,
-          alignment: Alignment.center,
 
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              colors: [
-                colorScheme.primary,
-                Color.fromARGB(255, 12, 179, 165), // Light greenish color),
-              ],
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
+    return BlocListener<LoginCubit, LoginState>(
+      listener: (context, state) {
+        if (state.state == RemoteDataState.error) {
+          // Handle error
+          showErrorSnackBar('حدث خطأ أثناء تسجيل الدخول');
+        } else if (state.state == RemoteDataState.subSuccess) {
+          openSheet(
+            context,
+            BlocProvider(
+              create: (_) => OtpCubit(),
+              child: ModernOTPScreen(
+                whatsapp: _selectedOtpType == 'whatsapp',
+                classnumber: _classNumberController.text.trim(),
+                idetifyer: state.idetifyer ?? '',
+              ),
             ),
-          ),
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 24),
+          );
+        }
+      },
+      child: Scaffold(
+        body: Form(
+          key: _formKey,
+          child: Container(
+            height: double.infinity,
+            alignment: Alignment.center,
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                colors: [
+                  colorScheme.primary,
+                  const Color.fromARGB(255, 12, 179, 165),
+                ],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              ),
+            ),
             child: SingleChildScrollView(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisSize: MainAxisSize.max,
                 children: [
-                  LogoAnimation(),
+                  SafeArea(child: const LogoAnimation()),
 
                   // Title
-                  Text('تسجيل الدخول', style: textTheme.headlineLarge),
-
-                  const SizedBox(height: 52),
-
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text('رقم الصنف', style: textTheme.labelLarge),
-                      const SizedBox(height: 8),
-                      CustomTextForm(
-                        controller: _emailController,
-                        hintText: 'أدخل رقم الصنف',
-                        onValidate: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'يرجى إدخال رقم الصنف';
-                          }
-                          return null;
-                        },
-                        suffixWidget: Padding(
-                          padding: const EdgeInsets.only(right: 16),
-                          child: Icon(PhosphorIcons.cube(), size: 22),
-                        ),
-                      ),
-
-                      const SizedBox(height: 20),
-
-                      // Password field
-                      Text('كلمة المرور', style: textTheme.labelLarge),
-                      const SizedBox(height: 8),
-                      CustomTextForm(
-                        controller: _passwordController,
-                        isPasswordVisible: true,
-                        hintText: 'أدخل كلمة المرور',
-                        onValidate: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'يرجى إدخال كلمة المرور';
-                          }
-                          return null;
-                        },
-                      ),
-
-                      const SizedBox(height: 20),
-
-                      // Terms checkbox
-
-                      // Login button
-                      SizedBox(
-                        width: double.infinity,
-                        height: 58,
-                        child: ElevatedButton(
-                          onPressed: _handleLogin,
-
-                          child: const Text('تسجيل الدخول'),
-                        ),
-                      ),
-
-                      // Divider
-
-                      // Sign up link
-                    ],
+                  Text(
+                    'تسجيل الدخول',
+                    style: textTheme.headlineLarge?.copyWith(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
+
+                  const SizedBox(height: 24),
+                  Container(
+                    margin: EdgeInsets.all(12),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 0,
+                      vertical: 24,
+                    ),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(25),
+                    ),
+
+                    child: _buildLogin(textTheme, colorScheme),
+                  ),
+
+                  const SizedBox(height: 24),
                 ],
               ),
             ),
@@ -131,25 +123,232 @@ class _SignUpPageState extends State<SignUpPage> {
     );
   }
 
-  void _handleLogin() {
-    if (!_formKey.currentState!.validate()) {
-      _showSnackBar('Please fill in all fields');
-      return;
-    }
+  Widget _buildLogin(TextTheme textTheme, ColorScheme colorScheme) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        // padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+        children: [
+          Text(
+            'رقم الصنف',
+            style: textTheme.titleMedium?.copyWith(
+              fontWeight: FontWeight.w600,
+              color: colorScheme.onSurface,
+            ),
+          ),
+          const SizedBox(height: 8),
+          CustomTextForm(
+            controller: _classNumberController,
+            hintText: 'أدخل رقم الصنف',
+            onValidate: (value) {
+              if (value == null || value.isEmpty) {
+                return 'يرجى إدخال رقم الصنف';
+              }
+              return null;
+            },
+            suffixWidget: Padding(
+              padding: const EdgeInsets.only(right: 16),
+              child: Icon(
+                PhosphorIcons.cube(),
+                size: 22,
+                color: colorScheme.primary,
+              ),
+            ),
+          ),
 
-    _showSnackBar('Sign up successful!');
-    // Add your login logic here
-  }
+          const SizedBox(height: 12),
 
-  void _showSnackBar(String message) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(message),
-        behavior: SnackBarBehavior.floating,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+          // Password Field
+          Text(
+            'كلمة المرور',
+            style: textTheme.titleMedium?.copyWith(
+              fontWeight: FontWeight.w600,
+              color: colorScheme.onSurface,
+            ),
+          ),
+          const SizedBox(height: 8),
+          CustomTextForm(
+            controller: _passwordController,
+            isPasswordVisible: true,
+            hintText: 'أدخل كلمة المرور',
+            onValidate: (value) {
+              if (value == null || value.isEmpty) {
+                return 'يرجى إدخال كلمة المرور';
+              }
+              return null;
+            },
+          ),
+          const SizedBox(height: 12),
+
+          // Form Card
+          _buildRadioButton(textTheme, colorScheme),
+
+          // const SizedBox(height:12),
+          LoginButton(onPressed: _handleLogin),
+        ],
       ),
     );
   }
-}
 
-//
+  Widget _buildRadioButton(TextTheme textTheme, ColorScheme colorScheme) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        // Item Number Field
+        Text('اختر طريقة ارسال رمز التحقق', style: textTheme.titleSmall),
+        const SizedBox(height: 12),
+
+        // Radio Button Options
+        Container(
+          decoration: BoxDecoration(
+            border: Border.all(
+              color: _selectedOtpType.isEmpty
+                  ? colorScheme.error.withOpacity(0.5)
+                  : colorScheme.outline.withOpacity(0.3),
+            ),
+            borderRadius: BorderRadius.circular(12),
+          ),
+          child: Column(
+            children: [
+              // Individual Merchant Option
+              RadioListTile<String>(
+                title: Row(
+                  children: [
+                    Icon(
+                      PhosphorIcons.whatsappLogo(),
+                      size: 25,
+                      color: Colors.green,
+                    ),
+                    const SizedBox(width: 8),
+                    Text(
+                      ' واتساب',
+                      style: textTheme.bodyLarge?.copyWith(
+                        fontWeight: _selectedOtpType == 'whatsapp'
+                            ? FontWeight.w600
+                            : FontWeight.normal,
+                      ),
+                    ),
+                  ],
+                ),
+
+                value: 'whatsapp',
+                groupValue: _selectedOtpType,
+                activeColor: colorScheme.primary,
+                onChanged: (String? value) {
+                  setState(() {
+                    _selectedOtpType = value ?? '';
+                  });
+                },
+                contentPadding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 8,
+                ),
+              ),
+
+              Divider(height: 1, color: colorScheme.outline.withOpacity(0.2)),
+
+              // Corporate Merchant Option
+              RadioListTile<String>(
+                title: Row(
+                  children: [
+                    Icon(
+                      PhosphorIcons.envelope(),
+                      size: 25,
+                      color: colorScheme.primary,
+                    ),
+                    const SizedBox(width: 8),
+                    Text(
+                      'البريد الإلكتروني',
+                      style: textTheme.bodyLarge?.copyWith(
+                        fontWeight: _selectedOtpType == 'email'
+                            ? FontWeight.w600
+                            : FontWeight.normal,
+                      ),
+                    ),
+                  ],
+                ),
+
+                value: 'email',
+                groupValue: _selectedOtpType,
+                activeColor: colorScheme.primary,
+                onChanged: (String? value) {
+                  setState(() {
+                    _selectedOtpType = value ?? '';
+                  });
+                },
+                contentPadding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 8,
+                ),
+              ),
+            ],
+          ),
+        ),
+
+        const SizedBox(height: 16),
+
+        // Login Button
+      ],
+    );
+  }
+
+  void _handleLogin() {
+    if (_loginCubit.state.idetifyer == RemoteDataState.loading) {
+      return; // Prevent multiple submissions
+    }
+    if (!_formKey.currentState!.validate()) {
+      showWarningSnackBar('يرجى ملء جميع الحقول المطلوبة');
+      return;
+    }
+
+    if (_selectedOtpType.isEmpty) {
+      showWarningSnackBar('يرجى اختيار طريقة ارسال رمز التحقق');
+      return;
+    }
+
+    _loginCubit.login(
+      classNumber: _classNumberController.text.trim(),
+      password: _passwordController.text.trim(),
+      whatsapp: _selectedOtpType == 'whatsapp',
+    );
+  }
+
+  void openSheet(BuildContext context, Widget child) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true, // important for keyboard resize
+      useSafeArea: true,
+      backgroundColor: Colors.transparent,
+      enableDrag: false,
+
+      isDismissible: false,
+      builder: (_) {
+        return LayoutBuilder(
+          builder: (context, constraints) {
+            final keyboardHeight = MediaQuery.of(context).viewInsets.bottom;
+            // If keyboard is visible, start bigger
+            final initialSize = keyboardHeight > 0 ? 0.95 : 0.6;
+
+            return DraggableScrollableSheet(
+              expand: false,
+              initialChildSize: initialSize,
+              minChildSize: 0.2,
+              maxChildSize: 0.95,
+              snap: true,
+              snapSizes: const [0.6, 0.95],
+
+              builder: (context, scrollController) {
+                return Padding(
+                  // push content above keyboard
+                  padding: EdgeInsets.only(bottom: keyboardHeight),
+                  child: child,
+                );
+              },
+            );
+          },
+        );
+      },
+    );
+  }
+}

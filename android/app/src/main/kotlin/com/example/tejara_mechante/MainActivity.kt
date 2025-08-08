@@ -1,4 +1,4 @@
-package com.example.tejara_mechante
+package com.tejara.mechante
 
 import io.flutter.embedding.android.FlutterActivity
 

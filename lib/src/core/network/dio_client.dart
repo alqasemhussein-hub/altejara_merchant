@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:dio/dio.dart';
 import 'package:injectable/injectable.dart';
-import 'package:techara_merchant/src/api/rest_client.dart';
+import 'package:techara_merchant/api/rest_client.dart';
 import 'package:techara_merchant/src/core/const/variable.dart';
 import 'package:techara_merchant/src/core/extenstion/general.dart';
 import 'package:techara_merchant/src/core/network/data_state.dart';

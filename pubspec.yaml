@@ -24,7 +24,6 @@ dependencies:
 
 #icons
   cupertino_icons: ^1.0.2
-  lucide_icons: ^0.257.0
 
 #statemanagment
   flutter_bloc: ^8.1.1
@@ -35,7 +34,6 @@ dependencies:
 
 #widget  
   flutter_svg: ^2.0.10+1
-  visibility_detector: ^0.4.0+2
   modal_bottom_sheet: ^3.0.0
   cached_network_image: ^3.2.3
   lottie: ^2.3.2
@@ -45,7 +43,9 @@ dependencies:
 
 
  #hardware
-  camera: ^0.10.6
+ 
+ 
+
  #localdatabase 
   hive: ^2.2.3
   hive_flutter: ^1.1.0
@@ -56,28 +56,14 @@ dependencies:
   
   path_provider: ^2.0.11
   provider: ^6.0.0
-  image_picker: ^0.8.5+3
-  package_info_plus: ^8.0.2
-  open_store: ^0.5.0
-  url_launcher: ^6.1.11
-  get_it: ^7.6.4
-  permission_handler: ^11.3.1
-
-
-  device_info_plus: ^11.1.1
-  geolocator: ^10.0.1
-  image_cropper: ^9.0.0
-  location: ^5.0.3
-
-
-  jwt_decoder: ^2.0.1
-  badges: ^3.1.2
-  flutter_local_notifications: ^19.4.0
-  app_links: ^6.3.2
-
-
-  flutter_udid: ^3.0.0
   file_picker: ^8.3.1
+
+  get_it: ^7.6.4
+
+
+
+
+
   phosphor_flutter: ^2.1.0
   json_annotation: ^4.9.0
   dart_mappable: ^4.6.0
