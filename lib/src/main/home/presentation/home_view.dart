@@ -4,6 +4,7 @@ import 'package:phosphor_flutter/phosphor_flutter.dart';
 import 'package:techara_merchant/api/models/home/certificate_data.dart';
 import 'package:techara_merchant/src/core/enums/general.dart';
 import 'package:techara_merchant/src/main/certificate/presentation/page/form/create_certificate_page.dart';
+import 'package:techara_merchant/src/main/core/extention/certificate_extention.dart';
 import 'package:techara_merchant/src/main/core/widget/certificate_card.dart';
 import 'package:techara_merchant/src/main/home/presentation/cubit/home_cubit.dart';
 import 'package:techara_merchant/src/main/home/presentation/widgets/loading_skeleton.dart';
@@ -86,7 +87,7 @@ class _HomeViewState extends State<HomeView> {
         // Navigate to create certificate page
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => CreateCertificateForm()),
+          MaterialPageRoute(builder: (context) => CreateCertificateFormPage()),
         );
       },
       child: Container(
@@ -164,7 +165,10 @@ class _HomeViewState extends State<HomeView> {
         const SizedBox(height: 16),
 
         ...recentTransactions
-            .map((transaction) => CertificateCard(transaction: transaction))
+            .map(
+              (transaction) =>
+                  CertificateCard(transaction: transaction.toDataItem()),
+            )
             .toList(),
       ],
     );

@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:techara_merchant/src/core/style/theme/cache_theme.dart';
+import 'package:techara_merchant/utils/injector.dart';
 
 class CustomTextForm extends StatefulWidget {
   const CustomTextForm({
@@ -8,16 +10,19 @@ class CustomTextForm extends StatefulWidget {
     this.hintText,
     this.suffixWidget,
     this.onValidate,
+    this.keyboardType,
+    this.enable = true,
+    this.maxLines = 1,
   }) : _controller = controller;
 
   final TextEditingController _controller;
   final bool isPasswordVisible;
   final String? hintText;
-
+  final int maxLines;
   final Widget? suffixWidget;
-
+  final TextInputType? keyboardType;
   final String? Function(String?)? onValidate;
-
+  final bool enable;
   @override
   State<CustomTextForm> createState() => _CustomTextFormState();
 }
@@ -27,11 +32,19 @@ class _CustomTextFormState extends State<CustomTextForm> {
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      maxLines: widget.maxLines,
+      keyboardType: widget.keyboardType,
       controller: widget._controller,
       obscureText: widget.isPasswordVisible && !_isPasswordVisible,
+      enabled: widget.enable,
+      readOnly: widget.enable == false,
+      style: getIt<ThemeService>().textTheme.titleMedium,
 
       decoration: InputDecoration(
         hintText: widget.hintText,
+        hintStyle: getIt<ThemeService>().textTheme.titleSmall?.copyWith(
+          color: getIt<ThemeService>().colorScheme.onSurface.withAlpha(150),
+        ),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(25),
           borderSide: BorderSide(color: Colors.transparent, width: 1),

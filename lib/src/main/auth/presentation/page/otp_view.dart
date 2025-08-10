@@ -249,7 +249,6 @@ class _ModernOTPScreenState extends State<ModernOTPScreen>
                       ),
                       const SizedBox(height: 20),
                       Container(
-                        height: 260,
                         child: Column(
                           children: [
                             // Title

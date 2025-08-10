@@ -7,6 +7,8 @@ import 'package:retrofit/retrofit.dart';
 import 'package:techara_merchant/api/models/certificate/add_certifecate_request.dart';
 import 'package:techara_merchant/api/models/certificate/add_certifecate_response.dart';
 import 'package:techara_merchant/api/models/certificate/certifecate_list_response.dart';
+import 'package:techara_merchant/api/models/certificate/params/certifecate_params_response.dart';
+import 'package:techara_merchant/api/models/certificate/price/certifecate_prices_response.dart';
 import 'package:techara_merchant/api/models/certificate/tajer_data_response.dart';
 
 import '../models/certifecate_form.dart';
@@ -29,4 +31,10 @@ abstract class CertifecateClient {
   /// Get Tajer Data
   @GET('/api/Certifecate/get-Tajer-Data')
   Future<TajerDataResponse> getApiCertifecateGetTajerData();
+
+  /// Get Certificate Parameters
+  @GET('/api/Certifecate/get-Certifecate-Params')
+  Future<CertifecateParamsResponse> getApiCertifecateGetCertifecateParams();
+  @GET('/api/Certifecate/get-Certifecate-prices')
+  Future<CertifecatePricesResponse> getApiCertifecateGetCertifecatePrices();
 }

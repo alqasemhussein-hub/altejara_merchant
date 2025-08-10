@@ -11,7 +11,7 @@ class AuthPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [BlocProvider(create: (_) => LoginCubit())],
-      child: const LoginPage(),
+      child: const AuthView(),
     );
   }
 }

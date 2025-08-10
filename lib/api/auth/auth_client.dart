@@ -51,4 +51,13 @@ abstract class AuthClient {
   Future<void> postApiAuthEditPassword({
     @Body() required EditPasswordForm body,
   });
+
+  @POST('/api/auth/check-azbara')
+  Future<bool> postApiAuthCheckAzbara({@Body() required TajerFilter body});
+  @POST('/api/Auth/user-validate')
+  Future<bool> postApiAuthUserValidate({
+    @Body() required UserValidateForm body,
+  });
+  @POST('/api/auth/sendOrder')
+  Future<String> postApiAuthSendOrder({@Body() required UserOrderForm body});
 }

@@ -7,6 +7,7 @@ import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:retrofit/retrofit.dart';
+import 'package:techara_merchant/api/models/certificate/upload_file_response.dart';
 
 import '../models/dictionarybase.dart';
 
@@ -18,29 +19,22 @@ abstract class FileClient {
 
   @MultiPart()
   @POST('/api/File/upload')
-  Future<void> postApiFileUpload({
-    @Part(name: 'File') File? file,
-  });
+  Future<String> postApiFileUpload({@Part(name: 'RemoteFile') File? file});
 
   @MultiPart()
   @POST('/api/File/upload-multi')
-  Future<void> postApiFileUploadMulti({
-    @Part(name: 'Files') List<File>? files,
-  });
+  Future<void> postApiFileUploadMulti({@Part(name: 'Files') List<File>? files});
 
-  @MultiPart()
   @POST('/api/File/pdf')
-  Future<void> postApiFilePdf({
-    @Part(name: 'Files') List<File>? files,
+  @MultiPart()
+  Future<String> postApiFilePdf({
+    @Part(name: 'Files') required List<MultipartFile> files,
   });
-
   @GET('/api/file/directory')
   Future<void> getApiFileDirectory();
 
   @POST('/api/file/base64')
-  Future<void> postApiFileBase64({
-    @Body() Dictionarybase? body,
-  });
+  Future<void> postApiFileBase64({@Body() Dictionarybase? body});
 
   @GET('/api/File/view/{fileName}')
   Future<void> getApiFileViewFileName({

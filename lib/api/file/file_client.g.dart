@@ -18,7 +18,7 @@ class _FileClient implements FileClient {
   final ParseErrorLogger? errorLogger;
 
   @override
-  Future<void> postApiFileUpload({File? file}) async {
+  Future<String> postApiFileUpload({File? file}) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     queryParameters.removeWhere((k, v) => v == null);
@@ -28,7 +28,7 @@ class _FileClient implements FileClient {
       if (file != null) {
         _data.files.add(
           MapEntry(
-            'File',
+            'RemoteFile',
             MultipartFile.fromFileSync(
               file.path,
               filename: file.path.split(Platform.pathSeparator).last,
@@ -37,7 +37,7 @@ class _FileClient implements FileClient {
         );
       }
     }
-    final _options = _setStreamType<void>(
+    final _options = _setStreamType<String>(
       Options(
             method: 'POST',
             headers: _headers,
@@ -52,7 +52,15 @@ class _FileClient implements FileClient {
           )
           .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
     );
-    await _dio.fetch<void>(_options);
+    final _result = await _dio.fetch<String>(_options);
+    late String _value;
+    try {
+      _value = _result.data!;
+    } on Object catch (e, s) {
+      errorLogger?.logError(e, s, _options);
+      rethrow;
+    }
+    return _value;
   }
 
   @override
@@ -94,26 +102,13 @@ class _FileClient implements FileClient {
   }
 
   @override
-  Future<void> postApiFilePdf({List<File>? files}) async {
+  Future<String> postApiFilePdf({required List<MultipartFile> files}) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
-    queryParameters.removeWhere((k, v) => v == null);
     final _headers = <String, dynamic>{};
     final _data = FormData();
-    if (files != null) {
-      _data.files.addAll(
-        files.map(
-          (i) => MapEntry(
-            'Files',
-            MultipartFile.fromFileSync(
-              i.path,
-              filename: i.path.split(Platform.pathSeparator).last,
-            ),
-          ),
-        ),
-      );
-    }
-    final _options = _setStreamType<void>(
+    _data.files.addAll(files.map((i) => MapEntry('Files', i)));
+    final _options = _setStreamType<String>(
       Options(
             method: 'POST',
             headers: _headers,
@@ -128,7 +123,15 @@ class _FileClient implements FileClient {
           )
           .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
     );
-    await _dio.fetch<void>(_options);
+    final _result = await _dio.fetch<String>(_options);
+    late String _value;
+    try {
+      _value = _result.data!;
+    } on Object catch (e, s) {
+      errorLogger?.logError(e, s, _options);
+      rethrow;
+    }
+    return _value;
   }
 
   @override

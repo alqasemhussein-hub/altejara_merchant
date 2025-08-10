@@ -13,11 +13,12 @@ import 'package:techara_merchant/src/core/network/network_handle_error.dart';
 
 @lazySingleton
 class ApiClient {
-  RestClient instance(String? url) {
+  RestClient instance(String? url, [String? lang]) {
     // final token = LocalDatabase.getToken();
     var dio = Dio();
-
-    // dio.options.headers['Accept'] = 'application/json';
+    if (lang != null) {
+      dio.options.headers['accept-language'] = lang;
+    }
     // dio.options.headers['Content-Type'] = 'application/json';
 
     // dio.options.headers['app-platform-type'] = Platform.isAndroid
@@ -29,7 +30,7 @@ class ApiClient {
     dio.interceptors.add(DioInterceptor(dio));
     dio.interceptors.add(DioLogger());
 
-    final restClient = RestClient(dio, baseUrl: baseUrl);
+    final restClient = RestClient(dio, baseUrl: url ?? baseUrl);
 
     return restClient;
   }

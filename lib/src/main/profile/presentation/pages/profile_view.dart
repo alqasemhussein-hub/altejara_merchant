@@ -24,7 +24,10 @@ class _ProfilePageState extends State<ProfilePageView>
   @override
   void initState() {
     super.initState();
-
+    if (context.read<ProfileCubit>().state.remoteState !=
+        RemoteDataState.loaded) {
+      context.read<ProfileCubit>().getHomeData();
+    }
     _animationController = AnimationController(
       duration: const Duration(milliseconds: 800),
       vsync: this,
@@ -54,7 +57,6 @@ class _ProfilePageState extends State<ProfilePageView>
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final size = MediaQuery.of(context).size;
 
     return Scaffold(
       appBar: AppBar(

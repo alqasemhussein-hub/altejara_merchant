@@ -1,45 +1,41 @@
 import 'package:techara_merchant/api/models/certificate/certificate_data_item.dart';
 import 'package:techara_merchant/api/models/home/certificate_data.dart';
 
-extension CertifecateDataItemMapper on CertifecateDataItem {
-  Certificate toCertificate() {
-    return Certificate(
+extension CertificateMapper on Certificate {
+  CertifecateDataItem toDataItem() {
+    return CertifecateDataItem(
       id: id,
-      sourceName: '', // No equivalent field in CertifecateDataItem
       productDscrp: productDscrp,
       targetName: targetName,
       sourceCountry: sourceCountry,
       generationDscrp: generationDscrp,
-      notes: notes ?? '',
+      notes: notes.isEmpty ? null : notes,
       detailsDscrp: detailsDscrp,
       detailsTypeDscrp: detailsTypeDscrp,
       wigth: wigth,
       certificateNo: certificateNo,
       certificateDate: certificateDate,
-      createdBy: null, // No equivalent field
-      createdDate: '', // No equivalent field
-      sourceAdress: '', // No equivalent field
       targetAddress: targetAddress,
-      placement: '', // No equivalent field
-      referenceNo: null, // No equivalent field
-      referenceDate: null, // No equivalent field
-      aZbaraNum: '', // No equivalent field
-      managerName: '', // No equivalent field
       lang: lang,
       regNo: regNo,
       regDate: regDate,
-      targetCountry: targetCountry,
-      tranzetCountry: tranzetCountry,
-      wigthNum: wigthNum,
-      wigthDscrp: null, // No equivalent field
+      targetCountry: targetCountry is int ? targetCountry as int : 0,
+      tranzetCountry: tranzetCountry is int ? tranzetCountry as int : 0,
       goverId: goverId,
-      operationId: operationId,
+      wigthNum: wigthNum,
       orderNo: orderNo,
-      itemsClassID: 0, // No equivalent field
-      countryID: 0, // No equivalent field
-      regExpireDate: expDate,
+      amount:
+          0, // Certificate doesn't have `amount`, set default or map from elsewhere
+      operationId: operationId,
       wigthDetails: wigthDetails,
-      billDocs: billDocs,
+      operationName: '', // no field in Certificate, set default or derive
+      expDate: regExpireDate, // mapping Certificate.regExpireDate to expDate
+      document: null, // no field in Certificate
+      certificateId: id, // or null if not same as `id`
+      state: 0, // no field in Certificate, set default
+      oN: null,
+      srialCertefecate: null,
+      billDocs: billDocs is String ? billDocs as String : null,
     );
   }
 }

@@ -4,10 +4,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 import 'package:techara_merchant/src/core/const/variable.dart';
 import 'package:techara_merchant/src/core/enums/general.dart';
-import 'package:techara_merchant/src/main/certificate/presentation/cubit/certificate_cubit.dart';
+import 'package:techara_merchant/src/main/certificate/presentation/cubit/certificate_history/certificate_cubit.dart';
 import 'package:techara_merchant/src/main/certificate/presentation/page/certificate_list_loading.dart';
 import 'package:techara_merchant/src/main/certificate/presentation/page/form/create_certificate_page.dart';
-import 'package:techara_merchant/src/main/core/extention/certificate_extention.dart';
 import 'package:techara_merchant/src/main/core/widget/certificate_card.dart';
 
 class CertificateListView extends StatelessWidget {
@@ -43,8 +42,7 @@ class CertificateListView extends StatelessWidget {
                     itemCount: state.certificates?.data.length,
                     itemBuilder: (context, index) {
                       return CertificateCard(
-                        transaction: state.certificates!.data[index]
-                            .toCertificate(),
+                        transaction: state.certificates!.data[index],
                       );
                     },
                   ),
@@ -53,7 +51,7 @@ class CertificateListView extends StatelessWidget {
       ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () => navigatorKey.currentState?.push(
-          MaterialPageRoute(builder: (context) => CreateCertificateForm()),
+          MaterialPageRoute(builder: (context) => CreateCertificateFormPage()),
         ),
         icon: Icon(PhosphorIcons.plus()),
         label: const Text('شهادة جديدة'),

@@ -25,7 +25,7 @@ class OtpCubit extends Cubit<OtpState> {
   void resentOtp({required String classNumber, required bool whatsapp}) {
     emit(state.copyWith(state: RemoteDataState.loading));
     apiClient
-        .postApiAuthResend2faCode(classNumber: classNumber, whatsapp: whatsapp)
+        .resendOtpForLogin(classNumber: classNumber, whatsapp: whatsapp)
         .then((response) {
           if (response is DataFailed) {
             emit(

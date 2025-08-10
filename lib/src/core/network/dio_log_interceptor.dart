@@ -30,9 +30,9 @@ class DioLogger extends InterceptorsWrapper {
   void onError(DioException err, ErrorInterceptorHandler handler) async {
     // Check if the user is unauthorized.
 
-    L.error(name: "Endpoint", msg: "${err.requestOptions.uri}");
-    L.error(name: "method", msg: err.requestOptions.method);
-    L.error(name: "Error Message", msg: jsonEncode(err.message));
+    L.error(name: 'Endpoint', msg: '${err.requestOptions.uri}');
+    L.error(name: 'method', msg: err.requestOptions.method);
+    L.error(name: 'Error Message', msg: jsonEncode(err.response?.data));
 
     handler.next(err);
   }

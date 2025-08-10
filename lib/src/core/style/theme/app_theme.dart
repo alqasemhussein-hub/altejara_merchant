@@ -15,7 +15,7 @@ class AppTheme {
       useMaterial3: true,
       colorScheme: colorScheme,
       scaffoldBackgroundColor: colorScheme.surface,
-      fontFamily: "Somar",
+      fontFamily: 'Somar',
       appBarTheme: AppBarTheme(backgroundColor: colorScheme.surfaceContainer),
       searchBarTheme: const SearchBarThemeData(
         elevation: WidgetStatePropertyAll(0),
@@ -190,15 +190,15 @@ class AppTheme {
         fontWeight: FontWeight.w700,
       ),
       titleLarge: baseTextTheme.titleLarge?.copyWith(
-        fontWeight: FontWeight.w600,
+        fontWeight: FontWeight.w500,
         color: colorScheme.onSurface,
       ),
       titleSmall: baseTextTheme.titleSmall?.copyWith(
-        fontWeight: FontWeight.w600,
+        fontWeight: FontWeight.w500,
         color: colorScheme.onSurface,
       ),
       titleMedium: baseTextTheme.titleMedium?.copyWith(
-        fontWeight: FontWeight.w700,
+        fontWeight: FontWeight.w500,
       ),
       headlineSmall: baseTextTheme.headlineSmall?.copyWith(
         fontWeight: FontWeight.w400,
