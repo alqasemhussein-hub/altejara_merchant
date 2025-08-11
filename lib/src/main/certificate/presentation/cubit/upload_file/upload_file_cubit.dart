@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:bloc/bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:techara_merchant/api/models/certificate/upload_file_response.dart';
 import 'package:techara_merchant/src/core/enums/general.dart';
 import 'package:techara_merchant/src/core/network/data_state.dart';
 import 'package:techara_merchant/src/main/certificate/datastource/certificate_datsource.dart';
@@ -21,7 +20,7 @@ class UploadFileCubit extends Cubit<UploadFileState> {
         emit(
           state.copyWith(
             remoteDataState: RemoteDataState.loaded,
-            uploadFileResponse: certificates.data,
+            uploadFileResponse: certificates.data!.path,
           ),
         );
       } else {
@@ -29,4 +28,46 @@ class UploadFileCubit extends Cubit<UploadFileState> {
       }
     });
   }
+
+  Future<void> uploadRegistrationFiles(
+    File profileImage,
+    List<File> uploadedFiles,
+  ) async {
+    emit(state.copyWith(remoteDataState: RemoteDataState.loading));
+
+    final profileResponse = await certificateDatsource.uploadFile(profileImage);
+    final otherFileresponse = await certificateDatsource
+        .uploadRegistrationFiles(uploadedFiles);
+
+    if (profileResponse is DataSuccess && otherFileresponse is DataSuccess) {
+      emit(
+        state.copyWith(
+          remoteDataState: RemoteDataState.loaded,
+          uploadFileResponse: profileResponse.data!.path,
+          otherFilePath: otherFileresponse.data!,
+        ),
+      );
+    } else {
+      emit(state.copyWith(remoteDataState: RemoteDataState.error));
+    }
+  }
+
+  //   void fetchCertificates() {
+  //     emit(state.copyWith(remoteDataState: RemoteDataState.loading));
+
+  //     certificateDatsource.fetchCertificates()
+
+  //  .then((certificates) {
+  //       if (certificates is DataSuccess) {
+  //         emit(
+  //           state.copyWith(
+  //             remoteDataState: RemoteDataState.loaded,
+  //             uploadFileResponse: certificates.data,
+  //           ),
+  //         );
+  //       } else {
+  //         emit(state.copyWith(remoteDataState: RemoteDataState.error));
+  //       }
+  //     });
+  //   }
 }

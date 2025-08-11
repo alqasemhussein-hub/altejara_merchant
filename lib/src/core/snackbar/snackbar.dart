@@ -1,7 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:techara_merchant/src/core/const/variable.dart';
+import 'package:techara_merchant/src/core/dialog/dialog_helper.dart';
 
 void showSuccessSnackBar(String message) {
+  DialogHelper.showSuccessDialog(
+    message: message,
+    navigatorKey.currentContext!,
+
+    onCancel: () {},
+  );
+  return;
   ScaffoldMessenger.of(navigatorKey.currentContext!).showSnackBar(
     SnackBar(
       content: Text(
@@ -16,15 +24,22 @@ void showSuccessSnackBar(String message) {
   );
 }
 
-void showErrorSnackBar(String message) {
-  ScaffoldMessenger.of(navigatorKey.currentContext!).showSnackBar(
+void showErrorSnackBar(String message, [BuildContext? context]) {
+  DialogHelper.showErrorDialog(
+    message: message,
+    navigatorKey.currentContext!,
+
+    onCancel: () {},
+  );
+  return;
+  ScaffoldMessenger.of(context ?? navigatorKey.currentContext!).showSnackBar(
     SnackBar(
       content: Text(
         message,
         style: const TextStyle(fontWeight: FontWeight.w500),
       ),
       behavior: SnackBarBehavior.floating,
-      backgroundColor: Theme.of(navigatorKey.currentContext!).colorScheme.error,
+      backgroundColor: Colors.red,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       margin: const EdgeInsets.all(16),
     ),
@@ -32,6 +47,13 @@ void showErrorSnackBar(String message) {
 }
 
 void showWarningSnackBar(String message) {
+  DialogHelper.showWariningDialog(
+    message: message,
+    navigatorKey.currentContext!,
+
+    onCancel: () {},
+  );
+  return;
   ScaffoldMessenger.of(navigatorKey.currentContext!).showSnackBar(
     SnackBar(
       content: Text(

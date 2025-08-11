@@ -28,8 +28,9 @@ abstract class FileClient {
   @POST('/api/File/pdf')
   @MultiPart()
   Future<String> postApiFilePdf({
-    @Part(name: 'Files') required List<MultipartFile> files,
+    @Part(name: 'Files') required List<File> files,
   });
+
   @GET('/api/file/directory')
   Future<void> getApiFileDirectory();
 

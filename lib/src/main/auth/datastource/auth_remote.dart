@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:techara_merchant/api/models/auth/confirm_order_form.dart';
 import 'package:techara_merchant/api/models/login_form.dart';
 import 'package:techara_merchant/api/models/login_response.dart';
 import 'package:techara_merchant/api/models/tajer_filter.dart';
@@ -29,7 +30,9 @@ class AuthRemoteDataSource {
       return DataFailed(
         ErrorResponseModel(
           statusCode: e.response?.statusCode ?? 500,
-          reason: e.message ?? 'Unknown error',
+          reason:
+              e.response?.data['error']['message'].toString() ??
+              'حدث خطأ اثناء تسجيل الدخول',
         ),
       );
     }
@@ -88,7 +91,7 @@ class AuthRemoteDataSource {
       return DataFailed(
         ErrorResponseModel(
           statusCode: e.response?.statusCode ?? 500,
-          reason: e.message ?? 'Unknown error',
+          reason: e.response?.data['Message'].toString() ?? 'Unknown error',
         ),
       );
     }
@@ -110,7 +113,7 @@ class AuthRemoteDataSource {
       return DataFailed(
         ErrorResponseModel(
           statusCode: e.response?.statusCode ?? 500,
-          reason: e.message ?? 'Unknown error',
+          reason: e.response?.data['Message'].toString() ?? 'Unknown error',
         ),
       );
     }
@@ -129,7 +132,26 @@ class AuthRemoteDataSource {
       return DataFailed(
         ErrorResponseModel(
           statusCode: e.response?.statusCode ?? 500,
-          reason: e.message ?? 'Unknown error',
+          reason: e.response?.data.toString() ?? 'Unknown error',
+        ),
+      );
+    }
+  }
+
+  Future<DataState<ConfirmOrderResponse>> confirmOtp({
+    required ConfirmOrderForm data,
+  }) async {
+    try {
+      final result = await getIt<ApiClient>()
+          .instance(null)
+          .auth
+          .postApiAuthConfirmOrder(body: data);
+      return DataSuccess(result);
+    } on DioException catch (e) {
+      return DataFailed(
+        ErrorResponseModel(
+          statusCode: e.response?.statusCode ?? 500,
+          reason: e.response?.data.toString() ?? 'Unknown error',
         ),
       );
     }

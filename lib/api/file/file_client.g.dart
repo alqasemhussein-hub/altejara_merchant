@@ -102,12 +102,22 @@ class _FileClient implements FileClient {
   }
 
   @override
-  Future<String> postApiFilePdf({required List<MultipartFile> files}) async {
+  Future<String> postApiFilePdf({required List<File> files}) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
     final _data = FormData();
-    _data.files.addAll(files.map((i) => MapEntry('Files', i)));
+    _data.files.addAll(
+      files.map(
+        (i) => MapEntry(
+          'Files',
+          MultipartFile.fromFileSync(
+            i.path,
+            filename: i.path.split(Platform.pathSeparator).last,
+          ),
+        ),
+      ),
+    );
     final _options = _setStreamType<String>(
       Options(
             method: 'POST',

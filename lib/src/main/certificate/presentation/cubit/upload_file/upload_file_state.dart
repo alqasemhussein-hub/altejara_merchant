@@ -4,6 +4,8 @@ part of 'upload_file_cubit.dart';
 abstract class UploadFileState with _$UploadFileState {
   const factory UploadFileState.initial({
     @Default(RemoteDataState.ideal) RemoteDataState remoteDataState,
-    UploadFileResponse? uploadFileResponse,
+
+    String? uploadFileResponse,
+    String? otherFilePath,
   }) = _Initial;
 }

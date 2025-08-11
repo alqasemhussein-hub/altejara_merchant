@@ -35,7 +35,9 @@ class LoginCubit extends Cubit<LoginState> {
             emit(
               state.copyWith(
                 state: RemoteDataState.error,
-                errorMessage: value.error?.reason,
+                errorMessage: value.error?.reason == 'User not found'
+                    ? 'المستخدم غير موجود'
+                    : 'حدث خطأ أثناء تسجيل الدخول',
               ),
             );
           }

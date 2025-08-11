@@ -139,9 +139,9 @@ class CertificateCard extends StatelessWidget {
         return 'مقبولة';
       case 1:
         return 'قيد الانتظار';
-      case 2:
-        return 'مرفوضة';
       case 4:
+        return 'مرفوضة';
+      case 2:
         return 'معلقة';
       default:
         return 'غير معروف';
@@ -154,9 +154,9 @@ class CertificateCard extends StatelessWidget {
         return Colors.green.shade700;
       case 1:
         return Colors.orange.shade700;
-      case 2:
-        return Colors.red.shade700;
       case 4:
+        return Colors.red.shade700;
+      case 2:
         return Colors.grey.shade700;
       default:
         return Colors.black87;

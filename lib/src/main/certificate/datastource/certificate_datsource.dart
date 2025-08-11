@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:dio/dio.dart';
@@ -122,10 +123,31 @@ class CertificateDatsource {
           .instance(documentUrl)
           .file
           .postApiFileUpload(file: data);
+      final d = jsonDecode(resultPath);
       final UploadFileResponse result = UploadFileResponse(
-        path: resultPath,
+        path: d['path'] as String,
       ); // <-- Manually create the object
       return DataSuccess(result);
+    } on DioException catch (e) {
+      return DataFailed(
+        ErrorResponseModel(
+          statusCode: e.response?.statusCode ?? 500,
+          reason: e.message ?? 'Unknown error',
+        ),
+      );
+    }
+  }
+
+  Future<DataState<String>> uploadRegistrationFiles(
+    List<File> uploadedFiles,
+  ) async {
+    try {
+      final resultPath = await getIt<ApiClient>()
+          .instance(documentUrl)
+          .file
+          .postApiFilePdf(files: uploadedFiles);
+
+      return DataSuccess(resultPath);
     } on DioException catch (e) {
       return DataFailed(
         ErrorResponseModel(

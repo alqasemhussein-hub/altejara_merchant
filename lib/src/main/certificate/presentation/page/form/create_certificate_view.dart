@@ -5,10 +5,13 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 import 'package:techara_merchant/api/models/certificate/add_certifecate_request.dart';
 import 'package:techara_merchant/api/models/certificate/certificate_data_item.dart';
+import 'package:techara_merchant/api/models/certificate/create_certificate/create_certificate_extention.dart';
+import 'package:techara_merchant/src/core/const/variable.dart';
 import 'package:techara_merchant/src/core/enums/general.dart';
 import 'package:techara_merchant/src/core/snackbar/snackbar.dart';
 import 'package:techara_merchant/src/main/certificate/presentation/cubit/certificate_parameter/certificate_parameter_cubit.dart';
 import 'package:techara_merchant/src/main/certificate/presentation/cubit/create_certificate/create_certificate_cubit.dart';
+import 'package:techara_merchant/src/main/certificate/presentation/cubit/cubit/payment_cubit.dart';
 import 'package:techara_merchant/src/main/certificate/presentation/cubit/upload_file/upload_file_cubit.dart';
 import 'package:techara_merchant/src/main/certificate/presentation/page/certificate_detials_view.dart';
 import 'package:techara_merchant/src/main/certificate/presentation/page/form/steps/importer_step.dart';
@@ -210,7 +213,7 @@ class _CreateCertificateFormViewState extends State<CreateCertificateFormView>
               previous.remoteDataState != current.remoteDataState,
           listener: (context, state) {
             if (state.remoteDataState == RemoteDataState.loaded) {
-              billDoc = state.uploadFileResponse?.path;
+              billDoc = state.uploadFileResponse;
               _goNext();
             } else if (state.remoteDataState == RemoteDataState.error) {
               showErrorSnackBar('حدث خطأ أثناء تحميل الملف');
@@ -344,7 +347,7 @@ class _CreateCertificateFormViewState extends State<CreateCertificateFormView>
                             orderNo: '',
                             amount: 0,
                             state: -1,
-                            operationId: -1,
+                            operationId: 1,
                             operationName: 'غير مرسل',
                           ),
                           targetCountry: importerCountryController.text,
@@ -438,45 +441,57 @@ class _CreateCertificateFormViewState extends State<CreateCertificateFormView>
   }
 
   Widget _buildConfirmationStep() {
-    return StepContainer(
-      title: 'هل أنت متأكد؟',
-      child: Column(
-        children: [
-          Container(
-            padding: const EdgeInsets.all(24),
-            decoration: BoxDecoration(
-              color: Colors.blue.shade50,
-              borderRadius: BorderRadius.circular(16),
-              border: Border.all(color: Colors.blue.shade200),
-            ),
-            child: Column(
-              children: [
-                Icon(
-                  PhosphorIcons.warning(PhosphorIconsStyle.fill),
-                  color: Colors.blue,
-                  size: 48,
+    return BlocBuilder<CreateCertificateCubit, CreateCertificateState>(
+      builder: (context, state) {
+        return StepContainer(
+          title: state.state == RemoteDataState.loaded
+              ? 'قم بدفع مبلغ الشهادة '
+              : 'هل أنت متأكد؟',
+          child: Column(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(24),
+                decoration: BoxDecoration(
+                  color: Colors.blue.shade50,
+                  borderRadius: BorderRadius.circular(16),
+                  border: Border.all(color: Colors.blue.shade200),
                 ),
-                const SizedBox(height: 16),
-                Text(
-                  'عند ضغطك على كلمة (تأكيد) سوف يتم إرسال بياناتك لغرفة تجارة بغداد',
-                  style: TextStyle(
-                    fontSize: 16,
-                    color: Colors.blue.shade700,
-                    height: 1.5,
-                  ),
-                  textAlign: TextAlign.center,
+                child: Column(
+                  children: [
+                    Icon(
+                      PhosphorIcons.warning(PhosphorIconsStyle.fill),
+                      color: Colors.blue,
+                      size: 48,
+                    ),
+                    const SizedBox(height: 16),
+                    Text(
+                      state.state == RemoteDataState.loaded
+                          ? 'اضغط على دفع للمباشرة في معاملتك'
+                          : 'عند ضغطك على كلمة (تأكيد) سوف يتم إرسال بياناتك لغرفة تجارة بغداد',
+                      style: TextStyle(
+                        fontSize: 16,
+                        color: Colors.blue.shade700,
+                        height: 1.5,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                    const SizedBox(height: 8),
+                    if (state.state != RemoteDataState.loaded)
+                      Text(
+                        'سيتم المباشرة في معاملتك بعد تسديد الأجور',
+                        style: TextStyle(
+                          fontSize: 14,
+                          color: Colors.blue.shade600,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                  ],
                 ),
-                const SizedBox(height: 8),
-                Text(
-                  'سيتم المباشرة في معاملتك بعد تسديد الأجور',
-                  style: TextStyle(fontSize: 14, color: Colors.blue.shade600),
-                  textAlign: TextAlign.center,
-                ),
-              ],
-            ),
+              ),
+            ],
           ),
-        ],
-      ),
+        );
+      },
     );
   }
 
@@ -495,7 +510,7 @@ class _CreateCertificateFormViewState extends State<CreateCertificateFormView>
       ),
       child: Row(
         children: [
-          if (_currentStep > 0)
+          if (_currentStep > 0 && _currentStep < _totalSteps - 1)
             Expanded(
               child: OutlinedButton(
                 onPressed: _previousStep,
@@ -523,39 +538,60 @@ class _CreateCertificateFormViewState extends State<CreateCertificateFormView>
             flex: _currentStep == 0 ? 1 : 1,
             child: BlocBuilder<CreateCertificateCubit, CreateCertificateState>(
               builder: (context, state) {
-                return ElevatedButton.icon(
-                  onPressed: state.state == RemoteDataState.loading
-                      ? null
-                      : _currentStep == _totalSteps - 1
-                      ? _submitForm
-                      : _nextStep,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: theme.colorScheme.primary,
-                    foregroundColor: Colors.white,
-                    padding: const EdgeInsets.symmetric(vertical: 16),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    elevation: 2,
-                  ),
+                return state.state == RemoteDataState.loaded
+                    ? BlocProvider(
+                        create: (context) => PaymentCubit(),
+                        child: PaymentButton(
+                          onSuccess: () {
+                            Future.delayed(
+                              const Duration(milliseconds: 2000),
+                              () {
+                                navigatorKey.currentState?.pop();
+                              },
+                            );
+                          },
+                          certificate: state.certificates!
+                              .toCertifecateDataItem(),
+                        ),
+                      )
+                    : ElevatedButton.icon(
+                        onPressed: state.state == RemoteDataState.loading
+                            ? null
+                            : _currentStep == _totalSteps - 1
+                            ? _submitForm
+                            : _nextStep,
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: theme.colorScheme.primary,
+                          foregroundColor: Colors.white,
+                          padding: const EdgeInsets.symmetric(vertical: 16),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          elevation: 2,
+                        ),
 
-                  label: Text(
-                    _currentStep == _totalSteps - 1
-                        ? 'تأكيد'
-                        : _currentStep == 0
-                        ? 'تأكيد'
-                        : 'التالي',
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
-                  ),
-                  icon: state.state == RemoteDataState.loading
-                      ? const CircularProgressIndicator(color: Colors.white)
-                      : (_currentStep == _totalSteps - 1)
-                      ? Icon(PhosphorIcons.check(), size: 20)
-                      : (_currentStep == 0)
-                      ? Icon(PhosphorIcons.check(), size: 20)
-                      : Icon(PhosphorIcons.arrowRight(), size: 20),
-                  iconAlignment: IconAlignment.end,
-                );
+                        label: Text(
+                          _currentStep == _totalSteps - 1
+                              ? 'تأكيد'
+                              : _currentStep == 0
+                              ? 'تأكيد'
+                              : 'التالي',
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                        icon: state.state == RemoteDataState.loading
+                            ? const CircularProgressIndicator(
+                                color: Colors.white,
+                              )
+                            : (_currentStep == _totalSteps - 1)
+                            ? Icon(PhosphorIcons.check(), size: 20)
+                            : (_currentStep == 0)
+                            ? Icon(PhosphorIcons.check(), size: 20)
+                            : Icon(PhosphorIcons.arrowRight(), size: 20),
+                        iconAlignment: IconAlignment.end,
+                      );
               },
             ),
           ),
@@ -645,7 +681,6 @@ class _CreateCertificateFormViewState extends State<CreateCertificateFormView>
                 child: ElevatedButton(
                   onPressed: () {
                     Navigator.of(context).pop(); // Close dialog
-                    Navigator.of(context).pop(); // Go back to previous screen
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.green,

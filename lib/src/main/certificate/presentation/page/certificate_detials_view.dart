@@ -3,8 +3,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:techara_merchant/api/models/certificate/certificate_data_item.dart';
 import 'package:techara_merchant/src/core/const/variable.dart';
 import 'package:techara_merchant/src/core/enums/general.dart';
+import 'package:techara_merchant/src/core/snackbar/snackbar.dart';
 import 'package:techara_merchant/src/core/widgets/state_loader.dart';
 import 'package:techara_merchant/src/main/certificate/presentation/cubit/certificate_price/certificate_price_cubit.dart';
+import 'package:techara_merchant/src/main/certificate/presentation/cubit/cubit/payment_cubit.dart';
+import 'package:techara_merchant/src/main/core/services/payment_web_view_screen.dart';
 import 'package:techara_merchant/src/main/profile/presentation/cubit/profile/profile_cubit.dart';
 
 class CertificateDetailsView extends StatelessWidget {
@@ -18,62 +21,114 @@ class CertificateDetailsView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListView(
-      padding: EdgeInsets.all(16),
-      children: [
-        // Summary sections
-        _getSourceDetaild(certificate.lang),
+    return BlocProvider(
+      create: (context) => PaymentCubit(),
+      child: ListView(
+        padding: EdgeInsets.all(16),
+        children: [
+          if (certificate.orderNo.isNotEmpty)
+            Container(
+              child: Wrap(
+                children: [
+                  if (certificate.operationId == 1)
+                    Container(
+                      width: double.infinity,
+                      child: PaymentButton(certificate: certificate),
+                    ),
+                  Padding(
+                    padding: const EdgeInsets.all(4),
+                    child: ElevatedButton(
+                      onPressed: () => navigatorKey.currentState?.push(
+                        MaterialPageRoute(
+                          builder: (context) => PaymentInAppWebViewScreen(
+                            url:
+                                'https://tajr.gcc.iq/orderinvoice/' +
+                                certificate.orderNo,
+                            title: 'تفاصيل الطلب',
+                          ),
+                        ),
+                      ),
+                      child: Text('عرض الطلب'),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(4),
+                    child: ElevatedButton(
+                      onPressed: certificate.operationId != 1
+                          ? null
+                          : () => navigatorKey.currentState?.push(
+                              MaterialPageRoute(
+                                builder: (context) => PaymentInAppWebViewScreen(
+                                  url:
+                                      'https://tajr.gcc.iq/viewcertificate/' +
+                                      certificate.orderNo,
+                                  title: 'تفاصيل الطلب',
+                                ),
+                              ),
+                            ),
+                      child: Text('عرض الشهادة'),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          // Summary sections
+          _getSourceDetaild(certificate.lang),
 
-        const SizedBox(height: 16),
+          const SizedBox(height: 16),
 
-        _buildSummarySection('معلومات الشحنة', [
-          _buildSummaryItem('رقم الفاتورة:', certificate.certificateNo),
-          _buildSummaryItem(
-            'تاريخ الفاتورة:',
-            certificate.certificateDate.split('T').first,
-          ),
-          _buildSummaryItem('رقم الاجازة:', certificate.regNo),
-          _buildSummaryItem(
-            'تاريخ إنشاء الشهادة:',
-            certificate.regDate.split('T').first,
-          ),
-          _buildSummaryItem(
-            'تاريخ انتهاء الاجازة:',
-            certificate.expDate.split('T').first,
-          ),
-        ]),
+          _buildSummarySection('معلومات الشحنة', [
+            _buildSummaryItem('رقم الفاتورة:', certificate.certificateNo),
+            _buildSummaryItem(
+              'تاريخ الفاتورة:',
+              certificate.certificateDate.split('T').first,
+            ),
+            _buildSummaryItem('رقم الاجازة:', certificate.regNo),
+            _buildSummaryItem(
+              'تاريخ إنشاء الشهادة:',
+              certificate.regDate.split('T').first,
+            ),
+            _buildSummaryItem(
+              'تاريخ انتهاء الاجازة:',
+              certificate.expDate.split('T').first,
+            ),
+          ]),
 
-        const SizedBox(height: 16),
+          const SizedBox(height: 16),
 
-        _buildSummarySection('تفاصيل المادة', [
-          _buildSummaryItem('تفاصيل الشحن:', certificate.generationDscrp),
-          _buildSummaryItem('المنتج وعنوانة كاملة:', certificate.productDscrp),
-          _buildSummaryItem('بلد المنشأ:', 'العراق'),
-          _buildSummaryItem('المكان:', 'بغداد'),
-          _buildSummaryItem('وصف السلع:', certificate.detailsDscrp),
-          // _buildSummaryItem('صنف المادة:', 'ملحقات نفطية خفيفة'),
-          _buildSummaryItem('نوع التعبئة:', certificate.detailsTypeDscrp),
-          _buildSummaryItem(
-            'الوزن القائم:',
-            certificate.wigthNum.toString() + ' ' + certificate.wigth,
-          ),
-          _buildSummaryItem('تفاصيل الوزن:', certificate.wigthDetails),
-          _buildSummaryItem('الملاحظات:', certificate.notes ?? ''),
-        ]),
+          _buildSummarySection('تفاصيل المادة', [
+            _buildSummaryItem('تفاصيل الشحن:', certificate.generationDscrp),
+            _buildSummaryItem(
+              'المنتج وعنوانة كاملة:',
+              certificate.productDscrp,
+            ),
+            _buildSummaryItem('بلد المنشأ:', 'العراق'),
+            _buildSummaryItem('المكان:', 'بغداد'),
+            _buildSummaryItem('وصف السلع:', certificate.detailsDscrp),
+            // _buildSummaryItem('صنف المادة:', 'ملحقات نفطية خفيفة'),
+            _buildSummaryItem('نوع التعبئة:', certificate.detailsTypeDscrp),
+            _buildSummaryItem(
+              'الوزن القائم:',
+              certificate.wigthNum.toString() + ' ' + certificate.wigth,
+            ),
+            _buildSummaryItem('تفاصيل الوزن:', certificate.wigthDetails),
+            _buildSummaryItem('الملاحظات:', certificate.notes ?? ''),
+          ]),
 
-        const SizedBox(height: 16),
+          const SizedBox(height: 16),
 
-        _buildSummarySection('تفاصيل المستورد', [
-          _buildSummaryItem('اسم المستورد:', certificate.targetName),
-          if (targetCountry != null)
-            _buildSummaryItem('البلد المستورد:', targetCountry!),
-          _buildSummaryItem('عنوان المستورد:', certificate.targetAddress),
-        ]),
+          _buildSummarySection('تفاصيل المستورد', [
+            _buildSummaryItem('اسم المستورد:', certificate.targetName),
+            if (targetCountry != null)
+              _buildSummaryItem('البلد المستورد:', targetCountry!),
+            _buildSummaryItem('عنوان المستورد:', certificate.targetAddress),
+          ]),
 
-        const SizedBox(height: 24),
+          const SizedBox(height: 24),
 
-        _priceSection(context),
-      ],
+          _priceSection(context),
+        ],
+      ),
     );
   }
 
@@ -158,7 +213,7 @@ class CertificateDetailsView extends StatelessWidget {
                       ),
                     ),
                     Text(
-                      certificate.amount.toString() + ' د.ع',
+                      '${(state.certificatePrices?.prices.fold<double>(0.0, (sum, price) => sum + (price.amount ?? 0.0)) ?? 0.0).toInt().toStringAsFixed(2)} د.ع', // Display with 2 decimal places
                       style: TextStyle(
                         fontSize: 16,
                         color: Colors.green.shade700,
@@ -256,5 +311,76 @@ class CertificateDetailsView extends StatelessWidget {
         ],
       ),
     );
+  }
+}
+
+class PaymentButton extends StatelessWidget {
+  const PaymentButton({super.key, required this.certificate, this.onSuccess});
+
+  final CertifecateDataItem certificate;
+  final Function()? onSuccess;
+  @override
+  Widget build(BuildContext context) {
+    return BlocListener<PaymentCubit, PaymentState>(
+      listenWhen: (previous, current) =>
+          previous.remoteStatus != current.remoteStatus,
+      listener: (context, state) {
+        if (state.remoteStatus == RemoteDataState.error) {
+          showErrorSnackBar(
+            state.errorMessage ?? 'حدث خطأ أثناء تحميل البيانات',
+          );
+        }
+        if (state.remoteStatus == RemoteDataState.loaded) {
+          _goPayment(state.paymentResponse?.formUrl ?? '');
+        }
+      },
+      child: BlocBuilder<PaymentCubit, PaymentState>(
+        builder: (context, state) {
+          return Padding(
+            padding: const EdgeInsets.all(4),
+            child: ElevatedButton.icon(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.green,
+                foregroundColor: Colors.white,
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 18,
+                ),
+              ),
+              onPressed: state.remoteStatus == RemoteDataState.loading
+                  ? () {}
+                  : () async {
+                      if (state.remoteStatus != RemoteDataState.loaded) {
+                        context.read<PaymentCubit>().getPaymentDetails(
+                          orderId: certificate.orderNo,
+                          amount: certificate.amount.toDouble(),
+                        );
+                        return;
+                      }
+                    },
+              icon: state.remoteStatus == RemoteDataState.loading
+                  ? CircularProgressIndicator.adaptive()
+                  : const Icon(Icons.payment),
+              label: Text(' دفع الطلب'),
+            ),
+          );
+        },
+      ),
+    );
+  }
+
+  _goPayment(String url) async {
+    final res = await navigatorKey.currentState?.push(
+      MaterialPageRoute(
+        builder: (context) =>
+            PaymentInAppWebViewScreen(url: url, title: 'دفع الطلب'),
+      ),
+    );
+    if (res == true) {
+      showSuccessSnackBar('تم الدفع بنجاح');
+      onSuccess?.call();
+    } else {
+      showErrorSnackBar('فشل الدفع');
+    }
   }
 }

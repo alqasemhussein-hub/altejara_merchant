@@ -23,17 +23,20 @@ class CustomDropDownField extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          label,
-          style: TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.w500,
-            color: Colors.black87,
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 8.0),
+          child: Text(
+            label,
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.w500,
+              color: Colors.black87,
+            ),
           ),
         ),
         const SizedBox(height: 8),
         DropdownButtonFormField<String>(
-          hint: Text('اختر $label'),
+          hint: Text('اختر'),
           value: controller.text.isEmpty ? null : controller.text,
           style: getIt<ThemeService>().textTheme.titleMedium,
 
@@ -45,19 +48,19 @@ class CustomDropDownField extends StatelessWidget {
             onChanged(v);
           },
           decoration: InputDecoration(
-            hintStyle: getIt<ThemeService>().textTheme.titleSmall?.copyWith(
+            hintStyle: getIt<ThemeService>().textTheme.bodySmall?.copyWith(
               color: getIt<ThemeService>().colorScheme.onSurface.withAlpha(150),
             ),
             border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(20),
+              borderRadius: BorderRadius.circular(25),
               borderSide: BorderSide(color: Colors.transparent),
             ),
             enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(20),
+              borderRadius: BorderRadius.circular(25),
               borderSide: BorderSide(color: Colors.transparent),
             ),
             focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(20),
+              borderRadius: BorderRadius.circular(25),
               borderSide: BorderSide(color: Colors.transparent),
             ),
 

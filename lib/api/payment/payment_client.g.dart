@@ -18,9 +18,9 @@ class _PaymentClient implements PaymentClient {
   final ParseErrorLogger? errorLogger;
 
   @override
-  Future<void> postApiPayment({
-    String? orderNumber,
-    double? amount,
+  Future<String> postApiPayment({
+    required String orderNumber,
+    required int amount,
     String? description,
   }) async {
     final _extra = <String, dynamic>{};
@@ -32,7 +32,7 @@ class _PaymentClient implements PaymentClient {
     queryParameters.removeWhere((k, v) => v == null);
     final _headers = <String, dynamic>{};
     const Map<String, dynamic>? _data = null;
-    final _options = _setStreamType<void>(
+    final _options = _setStreamType<String>(
       Options(method: 'POST', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
@@ -42,7 +42,15 @@ class _PaymentClient implements PaymentClient {
           )
           .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
     );
-    await _dio.fetch<void>(_options);
+    final _result = await _dio.fetch<String>(_options);
+    late String _value;
+    try {
+      _value = _result.data!;
+    } on Object catch (e, s) {
+      errorLogger?.logError(e, s, _options);
+      rethrow;
+    }
+    return _value;
   }
 
   @override

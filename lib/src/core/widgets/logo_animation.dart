@@ -8,7 +8,7 @@ class LogoAnimation extends StatefulWidget {
 }
 
 class _LogoAnimationState extends State<LogoAnimation>
-    with TickerProviderStateMixin {
+    with TickerProviderStateMixin, AutomaticKeepAliveClientMixin {
   late AnimationController _shimmerController;
   late Animation<double> _shimmerAnimation;
   late AnimationController _logoController;
@@ -36,13 +36,13 @@ class _LogoAnimationState extends State<LogoAnimation>
     );
   }
 
-  @override
-  void dispose() {
-    _shimmerController.dispose();
-    _shimmerController.dispose();
-    _logoController.dispose();
-    super.dispose();
-  }
+  // @override
+  // void dispose() {
+  //   _shimmerController.dispose();
+  //   _shimmerController.dispose();
+  //   _logoController.dispose();
+  //   super.dispose();
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -84,7 +84,7 @@ class _LogoAnimationState extends State<LogoAnimation>
                     );
                   },
                 ),
-                Image.asset("assets/images/logo.png"),
+                Image.asset('assets/images/logo.png'),
               ],
             ),
           ),
@@ -92,4 +92,7 @@ class _LogoAnimationState extends State<LogoAnimation>
       },
     );
   }
+
+  @override
+  bool get wantKeepAlive => true;
 }

@@ -7,7 +7,7 @@ import 'package:techara_merchant/src/core/const/variable.dart';
 import 'package:techara_merchant/src/core/enums/general.dart';
 import 'package:techara_merchant/src/core/extenstion/general.dart';
 import 'package:techara_merchant/src/core/snackbar/snackbar.dart';
-import 'package:techara_merchant/src/main/auth/presentation/cubit/bloc/otp_bloc.dart';
+import 'package:techara_merchant/src/main/auth/presentation/cubit/otp_login/otp_bloc.dart';
 import 'package:techara_merchant/src/main/auth/presentation/widget/otp_button.dart';
 import 'package:techara_merchant/src/main/main_page.dart';
 

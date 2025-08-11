@@ -12,11 +12,16 @@ import 'package:techara_merchant/utils/injector.dart';
 
 class FileSelectorField extends StatefulWidget {
   final String label;
+  final Widget? child;
 
   final Function(File a)? onFileSelected;
 
-  const FileSelectorField({Key? key, required this.label, this.onFileSelected})
-    : super(key: key);
+  const FileSelectorField({
+    Key? key,
+    required this.label,
+    this.onFileSelected,
+    this.child,
+  }) : super(key: key);
 
   @override
   State<FileSelectorField> createState() => _FileSelectorFieldState();
@@ -26,50 +31,62 @@ class _FileSelectorFieldState extends State<FileSelectorField> {
   File? _selectedFile;
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          widget.label,
-          style: TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.w500,
-            color: Colors.black87,
-          ),
-        ),
-        const SizedBox(height: 8),
-        Container(
-          width: double.infinity,
-          padding: const EdgeInsets.all(16),
-          decoration: BoxDecoration(
-            border: Border.all(
-              color: Colors.grey.shade300,
-              style: BorderStyle.solid,
-            ),
-            borderRadius: BorderRadius.circular(12),
-            color: Colors.white,
-          ),
-          child: Column(
+    return widget.child != null
+        ? InkWell(
+            onTap: () {
+              _pickFile();
+            },
+            child: widget.child!,
+          )
+        : Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Icon(
-                PhosphorIcons.cloudArrowUp(),
-                size: 48,
-                color: Colors.grey.shade400,
+              Text(
+                widget.label,
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w500,
+                  color: Colors.black87,
+                ),
               ),
               const SizedBox(height: 8),
-              _selectedFile != null
-                  ? Image.file(_selectedFile!)
-                  : Text(
-                      'لم يتم اختيار ملف',
-                      style: TextStyle(color: Colors.grey.shade600),
+
+              Container(
+                width: double.infinity,
+
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  border: Border.all(
+                    color: Colors.blue,
+                    style: BorderStyle.solid,
+                  ),
+                  borderRadius: BorderRadius.circular(25),
+                  color: Colors.black12,
+                ),
+                child: Column(
+                  children: [
+                    Icon(
+                      PhosphorIcons.cloudArrowUp(),
+                      size: 48,
+                      color: Colors.grey.shade400,
                     ),
-              const SizedBox(height: 12),
-              ElevatedButton(onPressed: _pickFile, child: Text('اختيار ملف')),
+                    const SizedBox(height: 8),
+                    _selectedFile != null
+                        ? Image.file(_selectedFile!)
+                        : Text(
+                            'لم يتم اختيار ملف',
+                            style: TextStyle(color: Colors.grey.shade600),
+                          ),
+                    const SizedBox(height: 12),
+                    ElevatedButton(
+                      onPressed: _pickFile,
+                      child: Text('اختيار ملف'),
+                    ),
+                  ],
+                ),
+              ),
             ],
-          ),
-        ),
-      ],
-    );
+          );
   }
 
   void _pickFile() async {

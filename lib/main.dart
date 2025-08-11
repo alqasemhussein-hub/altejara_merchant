@@ -8,7 +8,7 @@ import 'package:techara_merchant/src/core/const/variable.dart';
 import 'package:techara_merchant/src/core/service/local_storage.dart';
 import 'package:techara_merchant/src/core/style/theme/app_theme.dart';
 import 'package:techara_merchant/src/core/style/theme/theme_provider.dart';
-import 'package:techara_merchant/src/main/auth/presentation/page/auth_page.dart';
+import 'package:techara_merchant/src/main/auth/presentation/page/login_page.dart';
 import 'package:techara_merchant/src/main/main_page.dart';
 import 'package:techara_merchant/src/main/profile/presentation/cubit/profile/profile_cubit.dart';
 import 'package:techara_merchant/utils/injector.dart';
@@ -23,7 +23,7 @@ class MyApp extends StatelessWidget {
 
       theme: AppTheme.getTheme(Brightness.light),
       home: LocalDatabase.getUserEntity() == null
-          ? const AuthPage()
+          ? const LoginPage()
           : const MainPage(),
       localizationsDelegates: const [
         GlobalMaterialLocalizations.delegate,

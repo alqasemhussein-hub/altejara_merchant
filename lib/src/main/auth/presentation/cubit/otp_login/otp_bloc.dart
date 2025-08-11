@@ -1,5 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:techara_merchant/api/models/auth/confirm_order_form.dart';
 import 'package:techara_merchant/src/core/enums/general.dart';
 import 'package:techara_merchant/src/core/network/data_state.dart';
 import 'package:techara_merchant/src/core/service/local_storage.dart';
@@ -59,5 +60,26 @@ class OtpCubit extends Cubit<OtpState> {
         emit(state.copyWith(state: RemoteDataState.loaded));
       }
     });
+  }
+
+  void confirmOtp({required String email, required String otpCode}) {
+    emit(state.copyWith(state: RemoteDataState.loading));
+    apiClient
+        .confirmOtp(
+          data: ConfirmOrderForm(email: email, code: otpCode),
+        )
+        .then((response) {
+          if (response is DataFailed) {
+            emit(
+              state.copyWith(
+                state: RemoteDataState.error,
+                errorMessage: 'verifyOtp',
+              ),
+            );
+          }
+          if (response is DataSuccess) {
+            emit(state.copyWith(state: RemoteDataState.loaded));
+          }
+        });
   }
 }

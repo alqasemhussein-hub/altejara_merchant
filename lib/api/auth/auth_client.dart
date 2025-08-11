@@ -8,11 +8,11 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:retrofit/retrofit.dart';
+import 'package:techara_merchant/api/models/auth/confirm_order_form.dart';
 import 'package:techara_merchant/api/models/verify_2fa_response.dart';
 
 import '../models/change_password_form.dart';
 import '../models/confirm_email_form.dart';
-import '../models/confirm_order_form.dart';
 import '../models/edit_password_form.dart';
 import '../models/forget_password_query.dart';
 import '../models/login_form.dart';
@@ -60,4 +60,8 @@ abstract class AuthClient {
   });
   @POST('/api/auth/sendOrder')
   Future<String> postApiAuthSendOrder({@Body() required UserOrderForm body});
+  @POST('/api/auth/confirm_order')
+  Future<ConfirmOrderResponse> postApiAuthConfirmOrder({
+    @Body() required ConfirmOrderForm body,
+  });
 }

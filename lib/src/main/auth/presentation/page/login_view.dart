@@ -1,19 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
+import 'package:techara_merchant/src/core/const/variable.dart';
 import 'package:techara_merchant/src/core/enums/general.dart';
 import 'package:techara_merchant/src/core/snackbar/snackbar.dart';
 import 'package:techara_merchant/src/core/widgets/custom_text_field.dart';
 import 'package:techara_merchant/src/core/widgets/logo_animation.dart';
-import 'package:techara_merchant/src/main/auth/presentation/cubit/bloc/otp_bloc.dart';
 import 'package:techara_merchant/src/main/auth/presentation/cubit/login/login_cubit.dart';
+import 'package:techara_merchant/src/main/auth/presentation/cubit/otp_login/otp_bloc.dart';
 import 'package:techara_merchant/src/main/auth/presentation/page/otp_view.dart';
+import 'package:techara_merchant/src/main/auth/presentation/page/singup/signup_page.dart';
 import 'package:techara_merchant/src/main/auth/presentation/widget/login_button.dart';
 
 class LoginView extends StatefulWidget {
-  const LoginView({super.key, required this.onSignUpChange});
-
-  final Function onSignUpChange;
+  const LoginView({super.key});
 
   @override
   State<LoginView> createState() => _LoginViewState();
@@ -31,7 +31,7 @@ class _LoginViewState extends State<LoginView> {
   @override
   void initState() {
     super.initState();
-    _classNumberController.text = 'و3386';
+    _classNumberController.text = 'ع31076';
     _passwordController.text = '@vytHNTphbqZ';
     _loginCubit = context.read<LoginCubit>();
   }
@@ -53,7 +53,7 @@ class _LoginViewState extends State<LoginView> {
       listener: (context, state) {
         if (state.state == RemoteDataState.error) {
           // Handle error
-          showErrorSnackBar('حدث خطأ أثناء تسجيل الدخول');
+          showErrorSnackBar(state.errorMessage ?? 'حدث خطأ أثناء تسجيل الدخول');
         } else if (state.state == RemoteDataState.subSuccess) {
           openSheet(
             context,
@@ -189,7 +189,9 @@ class _LoginViewState extends State<LoginView> {
           // const SizedBox(height:12),
           LoginButton(onPressed: _handleLogin),
           TextButton(
-            onPressed: () => widget.onSignUpChange.call(),
+            onPressed: () => navigatorKey.currentState!.push(
+              MaterialPageRoute(builder: (_) => const SignUpPage()),
+            ),
             child: Text('إنشاء حساب جديد', textAlign: TextAlign.center),
           ),
         ],
@@ -319,42 +321,42 @@ class _LoginViewState extends State<LoginView> {
       whatsapp: _selectedOtpType == 'whatsapp',
     );
   }
+}
 
-  void openSheet(BuildContext context, Widget child) {
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true, // important for keyboard resize
-      useSafeArea: true,
-      backgroundColor: Colors.transparent,
-      enableDrag: false,
+void openSheet(BuildContext context, Widget child) {
+  showModalBottomSheet(
+    context: context,
+    isScrollControlled: true, // important for keyboard resize
+    useSafeArea: true,
+    backgroundColor: Colors.transparent,
+    enableDrag: false,
 
-      isDismissible: false,
-      builder: (_) {
-        return LayoutBuilder(
-          builder: (context, constraints) {
-            final keyboardHeight = MediaQuery.of(context).viewInsets.bottom;
-            // If keyboard is visible, start bigger
-            final initialSize = keyboardHeight > 0 ? 0.95 : 0.6;
+    isDismissible: false,
+    builder: (_) {
+      return LayoutBuilder(
+        builder: (context, constraints) {
+          final keyboardHeight = MediaQuery.of(context).viewInsets.bottom;
+          // If keyboard is visible, start bigger
+          final initialSize = keyboardHeight > 0 ? 0.95 : 0.6;
 
-            return DraggableScrollableSheet(
-              expand: false,
-              initialChildSize: initialSize,
-              minChildSize: 0.2,
-              maxChildSize: 0.95,
-              snap: true,
-              snapSizes: const [0.6, 0.95],
+          return DraggableScrollableSheet(
+            expand: false,
+            initialChildSize: initialSize,
+            minChildSize: 0.2,
+            maxChildSize: 0.95,
+            snap: true,
+            snapSizes: const [0.6, 0.95],
 
-              builder: (context, scrollController) {
-                return Padding(
-                  // push content above keyboard
-                  padding: EdgeInsets.only(bottom: keyboardHeight),
-                  child: child,
-                );
-              },
-            );
-          },
-        );
-      },
-    );
-  }
+            builder: (context, scrollController) {
+              return Padding(
+                // push content above keyboard
+                padding: EdgeInsets.only(bottom: keyboardHeight),
+                child: child,
+              );
+            },
+          );
+        },
+      );
+    },
+  );
 }

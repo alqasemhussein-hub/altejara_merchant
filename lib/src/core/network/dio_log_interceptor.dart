@@ -11,7 +11,7 @@ class DioLogger extends InterceptorsWrapper {
     RequestOptions options,
     RequestInterceptorHandler handler,
   ) async {
-    L.warning(name: 'EndPoint', msg: options.path);
+    L.warning(name: 'EndPoint', msg: options.uri);
     L.warning(name: 'method', msg: options.method);
     L.warning(name: 'header', msg: options.headers.toString());
 

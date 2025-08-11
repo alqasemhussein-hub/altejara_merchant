@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:techara_merchant/src/core/enums/general.dart';
+import 'package:techara_merchant/src/core/widgets/custom_text_field.dart';
+import 'package:techara_merchant/src/main/auth/presentation/cubit/register/register_cubit.dart';
 
 class PersonalInfoStep extends StatelessWidget {
   final TextEditingController nameController;
@@ -6,9 +10,11 @@ class PersonalInfoStep extends StatelessWidget {
   final TextEditingController phoneController;
   final TextEditingController residentialAddressController;
   final TextEditingController workAddressController;
+  final TextEditingController workAddressEnglishController;
   final TextEditingController factoryAddressController;
   final VoidCallback onNext;
   final VoidCallback onPrevious;
+  final _formKey = GlobalKey<FormState>();
 
   PersonalInfoStep({
     required this.nameController,
@@ -19,102 +25,130 @@ class PersonalInfoStep extends StatelessWidget {
     required this.factoryAddressController,
     required this.onNext,
     required this.onPrevious,
+    required this.workAddressEnglishController,
   });
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.all(24.0),
-      child: Column(
-        children: [
-          Text(
-            'المعلومات الشخصية',
-            style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-              fontWeight: FontWeight.bold,
-              color: Colors.black87,
-            ),
-            textAlign: TextAlign.center,
-          ),
-          SizedBox(height: 30),
-          Expanded(
-            child: SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  _buildTextField(
-                    controller: nameController,
-                    label: 'الاسم الثلاثي (باللغة العربية)',
-                    hint: 'محمد',
-                  ),
-                  SizedBox(height: 16),
-                  _buildTextField(
-                    controller: emailController,
-                    label: 'البريد الإلكتروني (اختياري)',
-                    keyboardType: TextInputType.emailAddress,
-                  ),
-                  SizedBox(height: 16),
-                  _buildTextField(
-                    controller: phoneController,
-                    label: 'رقم الهاتف (يبدأ ب وتساب)',
-                    keyboardType: TextInputType.phone,
-                  ),
-                  SizedBox(height: 16),
-                  _buildTextField(
-                    controller: residentialAddressController,
-                    label: 'عنوان السكن التفصيلي',
-                  ),
-                  SizedBox(height: 16),
-                  _buildTextField(
-                    controller: workAddressController,
-                    label: 'عنوان العمل التفصيلي',
-                  ),
-                  SizedBox(height: 16),
-                  _buildTextField(
-                    controller: factoryAddressController,
-                    label: 'عنوان العمل الاستثماري',
-                  ),
-                ],
-              ),
-            ),
-          ),
-          SizedBox(height: 20),
-          // Navigation buttons
-          Row(
-            children: [
-              Expanded(
-                child: OutlinedButton(
-                  onPressed: onPrevious,
-                  style: OutlinedButton.styleFrom(
-                    padding: EdgeInsets.symmetric(vertical: 16),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
+    return Form(
+      key: _formKey,
+      child: Padding(
+        padding: EdgeInsets.all(24.0),
+        child: Column(
+          children: [
+            Expanded(
+              child: SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Text(
+                      'المعلومات الشخصية',
+                      style: Theme.of(context).textTheme.headlineMedium
+                          ?.copyWith(
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black87,
+                          ),
+                      textAlign: TextAlign.center,
                     ),
-                  ),
-                  child: Text(
-                    'السابق',
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
-                  ),
+                    SizedBox(height: 30),
+                    _buildTextField(
+                      controller: nameController,
+                      label: 'الاسم الثلاثي (باللغة العربية)',
+                      hint: '',
+                    ),
+                    SizedBox(height: 16),
+                    _buildTextField(
+                      controller: emailController,
+                      label: 'البريد الإلكتروني (مفعل)',
+                      keyboardType: TextInputType.emailAddress,
+                    ),
+                    SizedBox(height: 16),
+                    _buildTextField(
+                      controller: phoneController,
+                      label: 'رقم الهاتف (يحتوي واتساب)',
+                      keyboardType: TextInputType.phone,
+                    ),
+                    SizedBox(height: 16),
+                    _buildTextField(
+                      controller: residentialAddressController,
+                      label: 'عنوان السكن (التفصيلي)',
+                    ),
+                    SizedBox(height: 16),
+                    _buildTextField(
+                      controller: workAddressController,
+                      label: 'عنوان العمل (التفصيلي)',
+                    ),
+                    SizedBox(height: 16),
+                    _buildTextField(
+                      controller: workAddressEnglishController,
+                      label: 'عنوان العمل (الانكليزي)',
+                    ),
+                  ],
                 ),
               ),
-              SizedBox(width: 16),
-              Expanded(
-                child: ElevatedButton(
-                  onPressed: onNext,
-                  style: ElevatedButton.styleFrom(
-                    padding: EdgeInsets.symmetric(vertical: 16),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
+            ),
+            SizedBox(height: 20),
+            // Navigation buttons
+            Row(
+              children: [
+                Expanded(
+                  child: OutlinedButton(
+                    onPressed: onPrevious,
+                    style: OutlinedButton.styleFrom(
+                      padding: EdgeInsets.symmetric(vertical: 16),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                    ),
+                    child: Text(
+                      'السابق',
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
                   ),
-                  child: Text(
-                    'التالي',
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                ),
+                SizedBox(width: 16),
+                Expanded(
+                  child: BlocBuilder<RegisterCubit, RegisterState>(
+                    builder: (context, state) {
+                      return ElevatedButton(
+                        onPressed:
+                            state.remoteDataState == RemoteDataState.loading
+                            ? null
+                            : () {
+                                if (_formKey.currentState?.validate() ??
+                                    false) {
+                                  context.read<RegisterCubit>().validateData(
+                                    emailController.text,
+                                    phoneController.text,
+                                  );
+                                }
+                              },
+                        style: ElevatedButton.styleFrom(
+                          padding: EdgeInsets.symmetric(vertical: 16),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                        ),
+                        child: state.remoteDataState == RemoteDataState.loading
+                            ? CircularProgressIndicator()
+                            : Text(
+                                'التالي',
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                      );
+                    },
                   ),
                 ),
-              ),
-            ],
-          ),
-        ],
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -125,29 +159,17 @@ class PersonalInfoStep extends StatelessWidget {
     String? hint,
     TextInputType? keyboardType,
   }) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.end,
-      children: [
-        Text(
-          label,
-          style: TextStyle(
-            fontSize: 14,
-            fontWeight: FontWeight.w500,
-            color: Colors.black87,
-          ),
-        ),
-        SizedBox(height: 8),
-        TextField(
-          controller: controller,
-          keyboardType: keyboardType,
-          textAlign: TextAlign.right,
-          decoration: InputDecoration(
-            hintText: hint,
-            border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
-            contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-          ),
-        ),
-      ],
+    return CustomTextForm(
+      controller: controller,
+      title: label,
+      hintText: hint,
+      keyboardType: keyboardType,
+      onValidate: (p0) {
+        if (p0 == null || p0.isEmpty) {
+          return 'هذا الحقل مطلوب';
+        }
+        return null;
+      },
     );
   }
 }
