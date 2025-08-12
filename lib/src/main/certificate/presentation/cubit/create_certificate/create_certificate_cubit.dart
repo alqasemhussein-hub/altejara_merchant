@@ -31,7 +31,14 @@ class CreateCertificateCubit extends Cubit<CreateCertificateState> {
           ),
         );
       } else if (response is DataFailed) {
-        emit(state.copyWith(state: RemoteDataState.error));
+        emit(
+          state.copyWith(
+            state: RemoteDataState.error,
+            errorMessage: (response.error?.reason == 'Certificate Expired'
+                ? 'الشهادة منتهية الصلاحية'
+                : 'حدث خطأ أثناء إنشاء الشهادة'),
+          ),
+        );
       }
     });
   }

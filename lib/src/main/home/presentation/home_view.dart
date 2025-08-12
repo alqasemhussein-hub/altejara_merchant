@@ -46,33 +46,42 @@ class _HomeViewState extends State<HomeView> {
                 ? HomeLoadingSkeleton()
                 : state.state == RemoteDataState.error
                 ? Center(child: Text('خطأ في تحميل البيانات'))
-                : SingleChildScrollView(
-                    padding: const EdgeInsets.all(16),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        // Quick Access Card
-                        _buildQuickAccessCard(),
+                : RefreshIndicator(
+                    onRefresh: () async {
+                      context.read<HomeCubit>().getHomeData();
+                    },
+                    child: SingleChildScrollView(
+                      padding: const EdgeInsets.all(16),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          // Quick Access Card
+                          _buildQuickAccessCard(),
 
-                        const SizedBox(height: 32),
+                          const SizedBox(height: 32),
 
-                        // Latest Transactions Section
-                        _buildLatestTransactions(
-                          state.homeData?.certificateData?.certificates ?? [],
-                        ),
+                          // Latest Transactions Section
+                          _buildLatestTransactions(
+                            state.homeData?.certificateData?.certificates ?? [],
+                          ),
 
-                        const SizedBox(height: 32),
+                          const SizedBox(height: 32),
 
-                        // Certificates Status Section
-                        _buildCertificatesStatus(
-                          state.homeData?.certificateData?.acceptedCount ?? 0,
-                          state.homeData?.certificateData?.pendingCount ?? 0,
-                          state.homeData?.certificateData?.rejectedCount ?? 0,
-                          state.homeData?.certificateData?.suspendedCount ?? 0,
-                          state.homeData?.certificateData?.certificatesCount ??
-                              0,
-                        ),
-                      ],
+                          // Certificates Status Section
+                          _buildCertificatesStatus(
+                            state.homeData?.certificateData?.acceptedCount ?? 0,
+                            state.homeData?.certificateData?.pendingCount ?? 0,
+                            state.homeData?.certificateData?.rejectedCount ?? 0,
+                            state.homeData?.certificateData?.suspendedCount ??
+                                0,
+                            state
+                                    .homeData
+                                    ?.certificateData
+                                    ?.certificatesCount ??
+                                0,
+                          ),
+                        ],
+                      ),
                     ),
                   ),
           ),

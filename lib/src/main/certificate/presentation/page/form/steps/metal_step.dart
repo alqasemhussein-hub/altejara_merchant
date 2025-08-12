@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:techara_merchant/src/core/style/theme/cache_theme.dart';
+import 'package:techara_merchant/src/core/translation/extention.dart';
 import 'package:techara_merchant/src/core/widgets/custom_drop_down.dart';
 import 'package:techara_merchant/src/core/widgets/custom_text_field.dart';
 import 'package:techara_merchant/src/core/widgets/state_loader.dart';
@@ -49,6 +50,7 @@ class _MetalStepState extends State<MetalStep> {
 
   @override
   Widget build(BuildContext context) {
+    final lang = _createCertificateCubit.selectedLanguage.text;
     return BlocBuilder<CertificateParameterCubit, CertificateParameterState>(
       builder: (context, parameterState) {
         return StateLoader(
@@ -56,12 +58,16 @@ class _MetalStepState extends State<MetalStep> {
           state: parameterState.state,
 
           child: StepContainer(
-            title: 'تفاصيل المادة',
+            title: 'تفاصيل المادة'.tr(lang),
             child: Column(
               spacing: 16,
               children: [
                 CustomDropDownField(
-                  label: 'تفاصيل الشحن',
+                  hint: 'اختر'.tr(lang),
+                  errorText:
+                      '${'يرجى إدخال'.tr(lang)}${'تفاصيل الشحن'.tr(lang)}',
+
+                  label: 'تفاصيل الشحن'.tr(lang),
                   controller: widget.shipmentTypeController,
                   items: parameterState.certificateParams!.generationTypes
                       .map((e) => e.dscrp)
@@ -72,7 +78,10 @@ class _MetalStepState extends State<MetalStep> {
                 ),
 
                 CustomDropDownField(
-                  label: 'المنتج وعنوانة كاملاً',
+                  hint: 'اختر'.tr(lang),
+                  label: 'المنتج وعنوانة كاملاً'.tr(lang),
+                  errorText:
+                      '${'يرجى إدخال'.tr(lang)}${'المنتج وعنوانة كاملاً'.tr(lang)}',
                   controller: widget.productTypeController,
                   items: parameterState.certificateParams!.productTypes
                       .map((e) => e.dscrp)
@@ -87,39 +96,47 @@ class _MetalStepState extends State<MetalStep> {
                   children: [
                     Expanded(
                       child: _buildTextLabled(
-                        label: 'بلد المنشأ',
+                        label: 'بلد المنشأ'.tr(lang),
                         value: 'العراق',
                       ),
                     ),
                     Expanded(
-                      child: _buildTextLabled(label: 'المكان', value: 'بغداد'),
+                      child: _buildTextLabled(
+                        label: 'المكان'.tr(lang),
+                        value: 'بغداد',
+                      ),
                     ),
                   ],
                 ),
 
                 // const SizedBox(height: 16),
                 CustomDropDownField(
-                  label: 'صنف المادة',
+                  hint: 'اختر'.tr(lang),
+                  label: 'صنف المادة'.tr(lang),
+                  errorText: '${'يرجى إدخال'.tr(lang)}${'صنف المادة'.tr(lang)}',
+
                   controller: widget.itemClassController,
                   items: parameterState.certificateParams!.itemClasses
-                      .map((e) => e.dscrpA)
+                      .map((e) => lang == 'English' ? e.dscrpE : e.dscrpA)
                       .toList(),
                   onChanged: (value) {
                     setState(() {});
                   },
                 ),
                 _buildTextField(
-                  label: 'وصف السلع',
+                  label: 'وصف السلع'.tr(lang),
                   controller: widget.itemDescriptionController,
                 ),
 
                 _buildTextField(
-                  label: 'نوع التعبئة',
+                  label: 'نوع التعبئة'.tr(lang),
                   controller: widget.fillTypeController,
                 ),
 
                 CustomDropDownField(
-                  label: 'نوع الكمية',
+                  hint: 'اختر'.tr(lang),
+                  label: 'نوع الكمية'.tr(lang),
+                  errorText: '${'يرجى إدخال'.tr(lang)}${'نوع الكمية'.tr(lang)}',
                   controller: widget.quantityTypeController,
                   items: parameterState.certificateParams!.stockUnits
                       .map((e) => e.dscrp)
@@ -130,20 +147,21 @@ class _MetalStepState extends State<MetalStep> {
                 ),
 
                 _buildNumberField(
-                  label: 'الوزن القائم',
+                  label: 'الوزن القائم'.tr(lang),
                   controller: widget.quantityController,
                 ),
 
                 _buildTextField(
-                  label: 'تفاصيل الوزن',
+                  label: 'تفاصيل الوزن'.tr(lang),
                   controller: widget.quantityDetailsController,
                 ),
 
                 _buildTextField(
-                  label: 'الملاحظات',
+                  label: 'الملاحظات'.tr(lang),
                   controller: widget.notesController,
 
                   maxLines: 3,
+                  isRequired: false,
                 ),
               ],
             ),
@@ -165,7 +183,9 @@ class _MetalStepState extends State<MetalStep> {
     required String label,
     required TextEditingController controller,
     int maxLines = 1,
+    bool isRequired = true,
   }) {
+    final lang = _createCertificateCubit.selectedLanguage.text;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -177,14 +197,16 @@ class _MetalStepState extends State<MetalStep> {
         CustomTextForm(
           maxLines: maxLines,
           controller: controller,
-          hintText: 'أدخل $label',
+          hintText: '${'أدخل'.tr(lang)} $label',
 
-          onValidate: (value) {
-            if (value == null || value.isEmpty) {
-              return 'يرجى إدخال $label';
-            }
-            return null;
-          },
+          onValidate: !isRequired
+              ? null
+              : (value) {
+                  if (value == null || value.isEmpty) {
+                    return '${'يرجى إدخال'.tr(lang)} $label';
+                  }
+                  return null;
+                },
         ),
       ],
     );
@@ -195,6 +217,7 @@ class _MetalStepState extends State<MetalStep> {
     required TextEditingController controller,
     int maxLines = 1,
   }) {
+    final lang = _createCertificateCubit.selectedLanguage.text;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -206,11 +229,11 @@ class _MetalStepState extends State<MetalStep> {
         CustomTextForm(
           maxLines: maxLines,
           controller: controller,
-          hintText: 'أدخل $label',
+          hintText: '${'أدخل'.tr(lang)} $label',
           keyboardType: TextInputType.number,
           onValidate: (value) {
             if (value == null || value.isEmpty) {
-              return 'يرجى إدخال $label';
+              return '${'يرجى إدخال'.tr(lang)} $label';
             }
             return null;
           },

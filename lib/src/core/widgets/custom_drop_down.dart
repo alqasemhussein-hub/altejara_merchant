@@ -7,6 +7,8 @@ class CustomDropDownField extends StatelessWidget {
   final TextEditingController controller;
   final List<String> items;
   final ValueChanged<String?> onChanged;
+  final String? hint;
+  final String? errorText;
 
   const CustomDropDownField({
     Key? key,
@@ -14,12 +16,13 @@ class CustomDropDownField extends StatelessWidget {
     required this.controller,
     required this.items,
     required this.onChanged,
+
+    this.hint,
+    this.errorText,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
-    final textTheme = Theme.of(context).textTheme;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -36,7 +39,7 @@ class CustomDropDownField extends StatelessWidget {
         ),
         const SizedBox(height: 8),
         DropdownButtonFormField<String>(
-          hint: Text('اختر'),
+          hint: Text(hint ?? 'اختر'),
           value: controller.text.isEmpty ? null : controller.text,
           style: getIt<ThemeService>().textTheme.titleMedium,
 
@@ -70,8 +73,9 @@ class CustomDropDownField extends StatelessWidget {
             ),
           ),
 
-          validator: (value) =>
-              value == null || value.isEmpty ? 'يرجى إدخال $label' : null,
+          validator: (value) => value == null || value.isEmpty
+              ? errorText ?? 'يرجى إدخال $label'
+              : null,
         ),
       ],
     );

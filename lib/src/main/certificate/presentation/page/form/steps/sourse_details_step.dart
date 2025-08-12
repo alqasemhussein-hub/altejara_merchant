@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:techara_merchant/src/core/style/theme/cache_theme.dart';
+import 'package:techara_merchant/src/core/translation/extention.dart';
+import 'package:techara_merchant/src/main/certificate/presentation/cubit/create_certificate/create_certificate_cubit.dart';
 import 'package:techara_merchant/src/main/certificate/presentation/widgets/step_container.dart';
 import 'package:techara_merchant/utils/injector.dart';
 
@@ -18,27 +21,28 @@ class SourceDetailsStep extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final lang = context.read<CreateCertificateCubit>().selectedLanguage.text;
     return StepContainer(
-      title: 'تفاصيل المصدر',
+      title: 'تفاصيل المصدر'.tr(lang),
       child: Column(
         children: [
           _buildTextLabled(
-            label: 'رقم الاضبارة',
+            label: 'رقم الاضبارة'.tr(lang),
             value: notificationNumberController.text,
           ),
           const SizedBox(height: 16),
           _buildTextLabled(
-            label: 'الاسم التجاري',
+            label: 'الاسم التجاري'.tr(lang),
             value: tradeNameController.text,
           ),
           const SizedBox(height: 16),
           _buildTextLabled(
-            label: 'المدير المفوض',
+            label: 'المدير المفوض'.tr(lang),
             value: authorizedManagerController.text,
           ),
           const SizedBox(height: 16),
           _buildTextLabled(
-            label: 'عنوان المصدر',
+            label: 'عنوان المصدر'.tr(lang),
             value: sourceAddressController.text,
           ),
         ],

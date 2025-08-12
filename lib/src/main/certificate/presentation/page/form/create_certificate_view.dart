@@ -9,6 +9,7 @@ import 'package:techara_merchant/api/models/certificate/create_certificate/creat
 import 'package:techara_merchant/src/core/const/variable.dart';
 import 'package:techara_merchant/src/core/enums/general.dart';
 import 'package:techara_merchant/src/core/snackbar/snackbar.dart';
+import 'package:techara_merchant/src/core/translation/extention.dart';
 import 'package:techara_merchant/src/main/certificate/presentation/cubit/certificate_parameter/certificate_parameter_cubit.dart';
 import 'package:techara_merchant/src/main/certificate/presentation/cubit/create_certificate/create_certificate_cubit.dart';
 import 'package:techara_merchant/src/main/certificate/presentation/cubit/cubit/payment_cubit.dart';
@@ -226,145 +227,162 @@ class _CreateCertificateFormViewState extends State<CreateCertificateFormView>
             if (state.state == RemoteDataState.loaded) {
               _successMessage();
             } else if (state.state == RemoteDataState.error) {
-              showErrorSnackBar('حدث خطأ أثناء إنشاء الشهادة');
+              showErrorSnackBar(state.errorMessage ?? '');
             }
           },
         ),
       ],
       child: Scaffold(
-        body: Form(
-          key: _formKey,
-          child: Column(
-            children: [
-              // Progress Header
-              _buildProgressHeader(theme),
+        body: Directionality(
+          textDirection:
+              _createCertificateCubit.selectedLanguage.text == 'English'
+              ? TextDirection.ltr
+              : TextDirection.rtl,
+          child: Form(
+            key: _formKey,
+            child: Column(
+              children: [
+                // Progress Header
+                _buildProgressHeader(theme),
 
-              // Form Content
-              Expanded(
-                child: PageView.builder(
-                  physics: const NeverScrollableScrollPhysics(),
-                  controller: _pageController,
-                  itemCount: _totalSteps,
-                  onPageChanged: (index) {
-                    setState(() {
-                      _currentStep = index;
-                    });
-                    _updateProgress();
-                  },
-                  itemBuilder: (context, index) {
-                    // Use a switch statement to return the correct widget for each step
-                    switch (index) {
-                      case 0:
-                        return LanguageStep(
-                          key: ValueKey('LanguageStep'), // Add a unique key
-                          selectedLanguage:
-                              _createCertificateCubit.selectedLanguage,
-                          onSelectLanguage: (value) {
-                            _createCertificateCubit.setLanguage(value);
-                            setState(() {});
-                          },
-                        );
-                      case 1:
-                        return SourceDetailsStep(
-                          key: ValueKey(
-                            'SourceDetailsStep',
-                          ), // Add a unique key
-                          notificationNumberController:
-                              _notificationNumberController,
-                          tradeNameController: _tradeNameController,
-                          authorizedManagerController:
-                              _authorizedManagerController,
-                          sourceAddressController: _sourceAddressController,
-                        );
-                      case 2:
-                        return ShipmentStep(
-                          key: ValueKey('ShipmentStep'), // Add a unique key
-                          certificateNumberController:
-                              _certificateNumberController,
-                          certificateDateController: _certificateDateController,
-                          registerNumberController: _registerNumberController,
-                          registerCreateDateController:
-                              _registerCreateDateController,
-                          registerExpDateController: _registerExpDateController,
-                          onFileSelected: (v) {
-                            setState(() {
-                              _selectedFile = v;
-                            });
-                          },
-                        );
-                      case 3:
-                        return MetalStep(
-                          key: ValueKey('MetalStep'), // Add a unique key
-                          notesController: notesController,
-                          quantityController: quantityController,
-                          quantityDetailsController: quantityDetailsController,
-                          fillTypeController: fillTypeController,
-                          itemDescriptionController: itemDescriptionController,
-                          shipmentTypeController: shipmentTypeController,
-                          productTypeController: productTypeController,
-                          itemClassController: _itemClassController,
-                          quantityTypeController: quantityTypeController,
-                        );
-                      case 4:
-                        return ImporterDetailsStep(
-                          key: ValueKey(
-                            'ImporterDetailsStep',
-                          ), // Add a unique key
-                          importerNameController: importerNameController,
-                          importerCountryController: importerCountryController,
-                          importerAddressController: importerAddressController,
-                        );
-                      case 5:
-                        return CertificateDetailsView(
-                          certificate: CertifecateDataItem(
-                            certificateId: -1,
-                            id: -1,
-                            goverId: -1,
-                            certificateNo: _certificateNumberController.text,
-                            certificateDate: _certificateDateController.text,
-                            regNo: _registerNumberController.text,
-                            regDate: _registerCreateDateController.text,
-                            expDate: _registerExpDateController.text,
-                            generationDscrp: shipmentTypeController.text,
-                            productDscrp: productTypeController.text,
-                            detailsDscrp: itemDescriptionController.text,
-                            detailsTypeDscrp: fillTypeController.text,
-                            wigthNum:
-                                double.tryParse(quantityController.text) ?? 0.0,
-                            wigth: quantityTypeController.text,
-                            wigthDetails: quantityDetailsController.text,
-                            notes: notesController.text,
-                            targetAddress: importerAddressController.text,
-                            targetName: importerNameController.text,
-                            targetCountry: 0,
-                            tranzetCountry: 0,
-                            sourceCountry: 'العراق',
-                            lang:
-                                _createCertificateCubit.selectedLanguage.text ==
-                                    'English'
-                                ? 'E'
-                                : 'A',
-                            orderNo: '',
-                            amount: 0,
-                            state: -1,
-                            operationId: 1,
-                            operationName: 'غير مرسل',
-                          ),
-                          targetCountry: importerCountryController.text,
-                        );
+                // Form Content
+                Expanded(
+                  child: PageView.builder(
+                    physics: const NeverScrollableScrollPhysics(),
+                    controller: _pageController,
+                    itemCount: _totalSteps,
+                    onPageChanged: (index) {
+                      setState(() {
+                        _currentStep = index;
+                      });
+                      _updateProgress();
+                    },
+                    itemBuilder: (context, index) {
+                      // Use a switch statement to return the correct widget for each step
+                      switch (index) {
+                        case 0:
+                          return LanguageStep(
+                            key: ValueKey('LanguageStep'), // Add a unique key
+                            selectedLanguage:
+                                _createCertificateCubit.selectedLanguage,
+                            onSelectLanguage: (value) {
+                              _createCertificateCubit.setLanguage(value);
+                              setState(() {});
+                            },
+                          );
+                        case 1:
+                          return SourceDetailsStep(
+                            key: ValueKey(
+                              'SourceDetailsStep',
+                            ), // Add a unique key
+                            notificationNumberController:
+                                _notificationNumberController,
+                            tradeNameController: _tradeNameController,
+                            authorizedManagerController:
+                                _authorizedManagerController,
+                            sourceAddressController: _sourceAddressController,
+                          );
+                        case 2:
+                          return ShipmentStep(
+                            key: ValueKey('ShipmentStep'), // Add a unique key
+                            certificateNumberController:
+                                _certificateNumberController,
+                            certificateDateController:
+                                _certificateDateController,
+                            registerNumberController: _registerNumberController,
+                            registerCreateDateController:
+                                _registerCreateDateController,
+                            registerExpDateController:
+                                _registerExpDateController,
+                            onFileSelected: (v) {
+                              setState(() {
+                                _selectedFile = v;
+                              });
+                            },
+                          );
+                        case 3:
+                          return MetalStep(
+                            key: ValueKey('MetalStep'), // Add a unique key
+                            notesController: notesController,
+                            quantityController: quantityController,
+                            quantityDetailsController:
+                                quantityDetailsController,
+                            fillTypeController: fillTypeController,
+                            itemDescriptionController:
+                                itemDescriptionController,
+                            shipmentTypeController: shipmentTypeController,
+                            productTypeController: productTypeController,
+                            itemClassController: _itemClassController,
+                            quantityTypeController: quantityTypeController,
+                          );
+                        case 4:
+                          return ImporterDetailsStep(
+                            key: ValueKey(
+                              'ImporterDetailsStep',
+                            ), // Add a unique key
+                            importerNameController: importerNameController,
+                            importerCountryController:
+                                importerCountryController,
+                            importerAddressController:
+                                importerAddressController,
+                          );
+                        case 5:
+                          return CertificateDetailsView(
+                            language:
+                                _createCertificateCubit.selectedLanguage.text,
+                            certificate: CertifecateDataItem(
+                              certificateId: -1,
+                              id: -1,
+                              goverId: -1,
+                              certificateNo: _certificateNumberController.text,
+                              certificateDate: _certificateDateController.text,
+                              regNo: _registerNumberController.text,
+                              regDate: _registerCreateDateController.text,
+                              expDate: _registerExpDateController.text,
+                              generationDscrp: shipmentTypeController.text,
+                              productDscrp: productTypeController.text,
+                              detailsDscrp: itemDescriptionController.text,
+                              detailsTypeDscrp: fillTypeController.text,
+                              wigthNum:
+                                  double.tryParse(quantityController.text) ??
+                                  0.0,
+                              wigth: quantityTypeController.text,
+                              wigthDetails: quantityDetailsController.text,
+                              notes: notesController.text,
+                              targetAddress: importerAddressController.text,
+                              targetName: importerNameController.text,
+                              targetCountry: 0,
+                              tranzetCountry: 0,
+                              sourceCountry: 'العراق',
+                              lang:
+                                  _createCertificateCubit
+                                          .selectedLanguage
+                                          .text ==
+                                      'English'
+                                  ? 'E'
+                                  : 'A',
+                              orderNo: '',
+                              amount: 0,
+                              state: -1,
+                              operationId: 1,
+                              operationName: 'غير مرسل',
+                            ),
+                            targetCountry: importerCountryController.text,
+                          );
 
-                      case 6:
-                        return _buildConfirmationStep();
-                      default:
-                        return const SizedBox.shrink(); // A safe fallback
-                    }
-                  },
+                        case 6:
+                          return _buildConfirmationStep();
+                        default:
+                          return const SizedBox.shrink(); // A safe fallback
+                      }
+                    },
+                  ),
                 ),
-              ),
 
-              // Navigation Buttons
-              _buildNavigationButtons(theme),
-            ],
+                // Navigation Buttons
+                _buildNavigationButtons(theme),
+              ],
+            ),
           ),
         ),
       ),
@@ -445,8 +463,12 @@ class _CreateCertificateFormViewState extends State<CreateCertificateFormView>
       builder: (context, state) {
         return StepContainer(
           title: state.state == RemoteDataState.loaded
-              ? 'قم بدفع مبلغ الشهادة '
-              : 'هل أنت متأكد؟',
+              ? 'قم بدفع مبلغ الشهادة '.tr(
+                  _createCertificateCubit.selectedLanguage.text,
+                )
+              : 'هل أنت متأكد؟'.tr(
+                  _createCertificateCubit.selectedLanguage.text,
+                ),
           child: Column(
             children: [
               Container(
@@ -466,8 +488,13 @@ class _CreateCertificateFormViewState extends State<CreateCertificateFormView>
                     const SizedBox(height: 16),
                     Text(
                       state.state == RemoteDataState.loaded
-                          ? 'اضغط على دفع للمباشرة في معاملتك'
-                          : 'عند ضغطك على كلمة (تأكيد) سوف يتم إرسال بياناتك لغرفة تجارة بغداد',
+                          ? 'اضغط على دفع للمباشرة في معاملتك'.tr(
+                              _createCertificateCubit.selectedLanguage.text,
+                            )
+                          : 'عند ضغطك على كلمة (تأكيد) سوف يتم إرسال بياناتك لغرفة تجارة بغداد'
+                                .tr(
+                                  _createCertificateCubit.selectedLanguage.text,
+                                ),
                       style: TextStyle(
                         fontSize: 16,
                         color: Colors.blue.shade700,
@@ -478,7 +505,9 @@ class _CreateCertificateFormViewState extends State<CreateCertificateFormView>
                     const SizedBox(height: 8),
                     if (state.state != RemoteDataState.loaded)
                       Text(
-                        'سيتم المباشرة في معاملتك بعد تسديد الأجور',
+                        'سيتم المباشرة في معاملتك بعد تسديد الأجور'.tr(
+                          _createCertificateCubit.selectedLanguage.text,
+                        ),
                         style: TextStyle(
                           fontSize: 14,
                           color: Colors.blue.shade600,
@@ -510,7 +539,7 @@ class _CreateCertificateFormViewState extends State<CreateCertificateFormView>
       ),
       child: Row(
         children: [
-          if (_currentStep > 0 && _currentStep < _totalSteps - 1)
+          if (_currentStep > 0)
             Expanded(
               child: OutlinedButton(
                 onPressed: _previousStep,
@@ -522,7 +551,7 @@ class _CreateCertificateFormViewState extends State<CreateCertificateFormView>
                   side: BorderSide(color: Colors.grey.shade400),
                 ),
                 child: Text(
-                  'السابق',
+                  'السابق'.tr(_createCertificateCubit.selectedLanguage.text),
                   style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.w600,
@@ -542,6 +571,9 @@ class _CreateCertificateFormViewState extends State<CreateCertificateFormView>
                     ? BlocProvider(
                         create: (context) => PaymentCubit(),
                         child: PaymentButton(
+                          title: 'دفع الطلب'.tr(
+                            _createCertificateCubit.selectedLanguage.text,
+                          ),
                           onSuccess: () {
                             Future.delayed(
                               const Duration(milliseconds: 2000),
@@ -572,10 +604,16 @@ class _CreateCertificateFormViewState extends State<CreateCertificateFormView>
 
                         label: Text(
                           _currentStep == _totalSteps - 1
-                              ? 'تأكيد'
+                              ? 'تأكيد'.tr(
+                                  _createCertificateCubit.selectedLanguage.text,
+                                )
                               : _currentStep == 0
-                              ? 'تأكيد'
-                              : 'التالي',
+                              ? 'تأكيد'.tr(
+                                  _createCertificateCubit.selectedLanguage.text,
+                                )
+                              : 'التالي'.tr(
+                                  _createCertificateCubit.selectedLanguage.text,
+                                ),
                           style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.w600,

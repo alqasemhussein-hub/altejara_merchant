@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:techara_merchant/src/core/service/local_storage.dart';
+import 'package:techara_merchant/src/core/usecase/logout_usecase.dart';
 
 class DioInterceptor extends InterceptorsWrapper {
   final Dio dio;
@@ -21,5 +22,13 @@ class DioInterceptor extends InterceptorsWrapper {
   @override
   onResponse(Response response, ResponseInterceptorHandler handler) async {
     handler.next(response);
+  }
+
+  @override
+  void onError(DioException err, ErrorInterceptorHandler handler) {
+    if (err.response?.statusCode == 401) {
+      logoutUseCase();
+    }
+    super.onError(err, handler);
   }
 }

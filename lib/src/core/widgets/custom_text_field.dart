@@ -94,7 +94,7 @@ class _CustomTextFormState extends State<CustomTextForm> {
                 widget.isPasswordVisible || widget.suffixWidget != null
                 ? BoxConstraints(minWidth: 48, minHeight: 48)
                 : null,
-            suffixIcon: widget.isPasswordVisible
+            suffixIcon: widget.isPasswordVisible == true
                 ? GestureDetector(
                     onTap: () {
                       setState(() {
@@ -107,7 +107,7 @@ class _CustomTextFormState extends State<CustomTextForm> {
                         _isPasswordVisible
                             ? Icons.visibility_off
                             : Icons.visibility,
-                        color: Colors.transparent,
+
                         size: 22,
                       ),
                     ),

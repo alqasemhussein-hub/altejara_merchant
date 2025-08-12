@@ -106,7 +106,7 @@ class CertificateDatsource {
       return DataFailed(
         ErrorResponseModel(
           statusCode: e.response?.statusCode ?? 500,
-          reason: e.message ?? 'Unknown error',
+          reason: e.response?.data['Message'] ?? 'Unknown error',
         ),
       );
     }

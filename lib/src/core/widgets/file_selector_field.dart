@@ -7,12 +7,14 @@ import 'package:phosphor_flutter/phosphor_flutter.dart';
 import 'package:techara_merchant/src/core/extenstion/general.dart';
 import 'package:techara_merchant/src/core/snackbar/snackbar.dart';
 import 'package:techara_merchant/src/core/style/theme/cache_theme.dart';
+import 'package:techara_merchant/src/core/translation/extention.dart';
 import 'package:techara_merchant/src/core/widgets/image_source_selector.dart';
 import 'package:techara_merchant/utils/injector.dart';
 
 class FileSelectorField extends StatefulWidget {
   final String label;
   final Widget? child;
+  final String lang;
 
   final Function(File a)? onFileSelected;
 
@@ -21,6 +23,7 @@ class FileSelectorField extends StatefulWidget {
     required this.label,
     this.onFileSelected,
     this.child,
+    required this.lang,
   }) : super(key: key);
 
   @override
@@ -34,7 +37,7 @@ class _FileSelectorFieldState extends State<FileSelectorField> {
     return widget.child != null
         ? InkWell(
             onTap: () {
-              _pickFile();
+              _pickFile(widget.lang);
             },
             child: widget.child!,
           )
@@ -74,13 +77,13 @@ class _FileSelectorFieldState extends State<FileSelectorField> {
                     _selectedFile != null
                         ? Image.file(_selectedFile!)
                         : Text(
-                            'لم يتم اختيار ملف',
+                            'لم يتم اختيار ملف'.tr(widget.lang),
                             style: TextStyle(color: Colors.grey.shade600),
                           ),
                     const SizedBox(height: 12),
                     ElevatedButton(
-                      onPressed: _pickFile,
-                      child: Text('اختيار ملف'),
+                      onPressed: () => _pickFile(widget.lang),
+                      child: Text('اختيار ملف'.tr(widget.lang)),
                     ),
                   ],
                 ),
@@ -89,12 +92,12 @@ class _FileSelectorFieldState extends State<FileSelectorField> {
           );
   }
 
-  void _pickFile() async {
+  void _pickFile(lang) async {
     final imageSource = await showImageSourceBottomSheet(context);
     if (imageSource == null) return;
     XFile? result = await ImagePicker().pickImage(source: imageSource);
     if (result == null) {
-      showWarningSnackBar('يرجى اختيار ملف');
+      showWarningSnackBar('يرجى اختيار ملف'.tr(lang));
       return;
     }
 
@@ -133,7 +136,7 @@ class _FileSelectorFieldState extends State<FileSelectorField> {
       });
       widget.onFileSelected!(_selectedFile!);
     } else {
-      showWarningSnackBar('فشل في قص الصورة');
+      showWarningSnackBar('فشل في قص الصورة'.tr(lang));
     }
   }
 }

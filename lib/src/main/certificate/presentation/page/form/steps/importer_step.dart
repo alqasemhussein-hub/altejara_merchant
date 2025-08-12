@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:techara_merchant/src/core/translation/extention.dart';
 import 'package:techara_merchant/src/core/widgets/custom_drop_down.dart';
 import 'package:techara_merchant/src/core/widgets/custom_text_field.dart';
 import 'package:techara_merchant/src/main/certificate/presentation/cubit/certificate_parameter/certificate_parameter_cubit.dart';
@@ -21,18 +22,21 @@ class ImporterDetailsStep extends StatelessWidget {
   Widget build(BuildContext context) {
     final lang = context.read<CreateCertificateCubit>().selectedLanguage.text;
     return StepContainer(
-      title: 'تفاصيل المستورد',
+      title: 'تفاصيل المستورد'.tr(lang),
       child: Column(
         children: [
           _buildTextField(
-            label: 'اسم المستورد',
+            label: 'اسم المستورد'.tr(lang),
             controller: importerNameController,
+            lang: lang,
           ),
           const SizedBox(height: 16),
 
           CustomDropDownField(
-            label: 'البلد المستورد',
+            label: 'البلد المستورد'.tr(lang),
             controller: importerCountryController,
+            hint: 'اختر'.tr(lang),
+            errorText: 'يرجى اختيار بلد المستورد'.tr(lang),
             items: context
                 .read<CertificateParameterCubit>()
                 .state
@@ -45,8 +49,9 @@ class ImporterDetailsStep extends StatelessWidget {
           ),
           const SizedBox(height: 16),
           _buildTextField(
-            label: 'عنوان المستورد',
+            label: 'عنوان المستورد'.tr(lang),
             controller: importerAddressController,
+            lang: lang,
           ),
         ],
       ),
@@ -57,6 +62,7 @@ class ImporterDetailsStep extends StatelessWidget {
     required String label,
     required TextEditingController controller,
     int maxLines = 1,
+    lang,
   }) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -69,11 +75,11 @@ class ImporterDetailsStep extends StatelessWidget {
         CustomTextForm(
           maxLines: maxLines,
           controller: controller,
-          hintText: 'أدخل $label',
+          hintText: '${'أدخل'.tr(lang)} $label',
 
           onValidate: (value) {
             if (value == null || value.isEmpty) {
-              return 'يرجى إدخال $label';
+              return '${'يرجى إدخال'.tr(lang)} $label';
             }
             return null;
           },

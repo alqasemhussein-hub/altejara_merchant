@@ -5,12 +5,14 @@ class CustomDateField extends StatelessWidget {
   final String hintText;
   final TextEditingController controller;
   final String? Function(String?)? onValidate;
+  final DateTime? initialValue;
   const CustomDateField({
     Key? key,
     required this.label,
     required this.controller,
     required this.hintText,
     this.onValidate,
+    this.initialValue,
   }) : super(key: key);
 
   @override
@@ -61,8 +63,8 @@ class CustomDateField extends StatelessWidget {
           onTap: () async {
             final date = await showDatePicker(
               context: context,
-              initialDate: DateTime.now(),
-              firstDate: DateTime(2020),
+              initialDate: initialValue ?? DateTime.now(),
+              firstDate: initialValue ?? DateTime(2020),
               lastDate: DateTime(2030),
             );
             if (date != null) {

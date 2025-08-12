@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
+import 'package:techara_merchant/src/core/translation/extention.dart';
 import 'package:techara_merchant/src/core/widgets/custom_drop_down.dart';
 import 'package:techara_merchant/src/main/certificate/presentation/widgets/step_container.dart';
 
@@ -15,8 +16,8 @@ class LanguageStep extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return StepContainer(
-      title: 'إنشاء شهادة منشأ',
-      subtitle: 'قم باختيار لغة شهادة المنشأ',
+      title: 'إنشاء شهادة منشأ'.tr(selectedLanguage.text),
+      subtitle: 'قم باختيار لغة شهادة المنشأ'.tr(selectedLanguage.text),
       child: Column(
         children: [
           // Logo placeholder
@@ -37,7 +38,7 @@ class LanguageStep extends StatelessWidget {
           const SizedBox(height: 32),
 
           CustomDropDownField(
-            label: 'اللغة',
+            label: 'اللغة'.tr(selectedLanguage.text),
             controller: selectedLanguage,
             items: ['اللغة العربية', 'English'],
             onChanged: (value) => onSelectLanguage(value ?? ''),
@@ -53,7 +54,8 @@ class LanguageStep extends StatelessWidget {
               border: Border.all(color: Colors.red.shade200),
             ),
             child: Text(
-              'عزيزي المقدم! إذا كنت تصدر منتجك إلى الدول الجنبية أختر اللغة الإنكليزية وإذا كنت تصدر منتجك إلى الدول العربية أختر اللغة العربية',
+              'عزيزي المقدم! إذا كنت تصدر منتجك إلى الدول الجنبية أختر اللغة الإنكليزية وإذا كنت تصدر منتجك إلى الدول العربية أختر اللغة العربية'
+                  .tr(selectedLanguage.text),
               style: TextStyle(
                 color: Colors.red.shade700,
                 fontSize: 14,

@@ -4,6 +4,7 @@ import 'package:techara_merchant/api/models/certificate/certificate_data_item.da
 import 'package:techara_merchant/src/core/const/variable.dart';
 import 'package:techara_merchant/src/core/enums/general.dart';
 import 'package:techara_merchant/src/core/snackbar/snackbar.dart';
+import 'package:techara_merchant/src/core/translation/extention.dart';
 import 'package:techara_merchant/src/core/widgets/state_loader.dart';
 import 'package:techara_merchant/src/main/certificate/presentation/cubit/certificate_price/certificate_price_cubit.dart';
 import 'package:techara_merchant/src/main/certificate/presentation/cubit/cubit/payment_cubit.dart';
@@ -13,10 +14,12 @@ import 'package:techara_merchant/src/main/profile/presentation/cubit/profile/pro
 class CertificateDetailsView extends StatelessWidget {
   final CertifecateDataItem certificate;
   final String? targetCountry;
+  final String? language;
   const CertificateDetailsView({
     Key? key,
     required this.certificate,
     this.targetCountry,
+    this.language,
   }) : super(key: key);
 
   @override
@@ -30,7 +33,7 @@ class CertificateDetailsView extends StatelessWidget {
             Container(
               child: Wrap(
                 children: [
-                  if (certificate.operationId == 1)
+                  if (certificate.operationId != 4)
                     Container(
                       width: double.infinity,
                       child: PaymentButton(certificate: certificate),
@@ -41,28 +44,31 @@ class CertificateDetailsView extends StatelessWidget {
                       onPressed: () => navigatorKey.currentState?.push(
                         MaterialPageRoute(
                           builder: (context) => PaymentInAppWebViewScreen(
+                            isPopWhenFinished: false,
                             url:
                                 'https://tajr.gcc.iq/orderinvoice/' +
                                 certificate.orderNo,
-                            title: 'تفاصيل الطلب',
+                            title: 'تفاصيل الطلب'.tr(language ?? 'ar'),
                           ),
                         ),
                       ),
-                      child: Text('عرض الطلب'),
+                      child: Text('عرض الطلب'.tr(language ?? 'ar')),
                     ),
                   ),
+
                   Padding(
                     padding: const EdgeInsets.all(4),
                     child: ElevatedButton(
-                      onPressed: certificate.operationId != 1
+                      onPressed: certificate.operationId != 3
                           ? null
                           : () => navigatorKey.currentState?.push(
                               MaterialPageRoute(
                                 builder: (context) => PaymentInAppWebViewScreen(
+                                  isPopWhenFinished: false,
                                   url:
                                       'https://tajr.gcc.iq/viewcertificate/' +
                                       certificate.orderNo,
-                                  title: 'تفاصيل الطلب',
+                                  title: 'عرض الشهادة',
                                 ),
                               ),
                             ),
@@ -77,51 +83,78 @@ class CertificateDetailsView extends StatelessWidget {
 
           const SizedBox(height: 16),
 
-          _buildSummarySection('معلومات الشحنة', [
-            _buildSummaryItem('رقم الفاتورة:', certificate.certificateNo),
+          _buildSummarySection('معلومات الشحنة'.tr(language ?? 'ar'), [
             _buildSummaryItem(
-              'تاريخ الفاتورة:',
+              'رقم الفاتورة'.tr(language ?? 'ar'),
+              certificate.certificateNo,
+            ),
+            _buildSummaryItem(
+              'تاريخ الفاتورة'.tr(language ?? 'ar'),
               certificate.certificateDate.split('T').first,
             ),
-            _buildSummaryItem('رقم الاجازة:', certificate.regNo),
             _buildSummaryItem(
-              'تاريخ إنشاء الشهادة:',
+              'رقم الاجازة'.tr(language ?? 'ar'),
+              certificate.regNo,
+            ),
+            _buildSummaryItem(
+              'تاريخ إنشاء الشهادة'.tr(language ?? 'ar'),
               certificate.regDate.split('T').first,
             ),
             _buildSummaryItem(
-              'تاريخ انتهاء الاجازة:',
+              'تاريخ انتهاء الاجازة'.tr(language ?? 'ar'),
               certificate.expDate.split('T').first,
             ),
           ]),
 
           const SizedBox(height: 16),
 
-          _buildSummarySection('تفاصيل المادة', [
-            _buildSummaryItem('تفاصيل الشحن:', certificate.generationDscrp),
+          _buildSummarySection('تفاصيل المادة'.tr(language ?? 'ar'), [
             _buildSummaryItem(
-              'المنتج وعنوانة كاملة:',
-              certificate.productDscrp,
+              'تفاصيل الشحن'.tr(language ?? 'ar'),
+              certificate.generationDscrp,
             ),
-            _buildSummaryItem('بلد المنشأ:', 'العراق'),
-            _buildSummaryItem('المكان:', 'بغداد'),
-            _buildSummaryItem('وصف السلع:', certificate.detailsDscrp),
-            // _buildSummaryItem('صنف المادة:', 'ملحقات نفطية خفيفة'),
-            _buildSummaryItem('نوع التعبئة:', certificate.detailsTypeDscrp),
+            _buildSummaryItem('المنتج وعنوانة كاملة', certificate.productDscrp),
+            _buildSummaryItem('بلد المنشأ'.tr(language ?? 'ar'), 'العراق'),
+            _buildSummaryItem('المكان'.tr(language ?? 'ar'), 'بغداد'),
             _buildSummaryItem(
-              'الوزن القائم:',
+              'وصف السلع'.tr(language ?? 'ar'),
+              certificate.detailsDscrp,
+            ),
+            // _buildSummaryItem('صنف المادة', 'ملحقات نفطية خفيفة'),
+            _buildSummaryItem(
+              'نوع التعبئة'.tr(language ?? 'ar'),
+              certificate.detailsTypeDscrp,
+            ),
+            _buildSummaryItem(
+              'الوزن القائم'.tr(language ?? 'ar'),
               certificate.wigthNum.toString() + ' ' + certificate.wigth,
             ),
-            _buildSummaryItem('تفاصيل الوزن:', certificate.wigthDetails),
-            _buildSummaryItem('الملاحظات:', certificate.notes ?? ''),
+            _buildSummaryItem(
+              'تفاصيل الوزن'.tr(language ?? 'ar'),
+              certificate.wigthDetails,
+            ),
+            _buildSummaryItem(
+              'الملاحظات'.tr(language ?? 'ar'),
+              certificate.notes ?? '',
+            ),
           ]),
 
           const SizedBox(height: 16),
 
-          _buildSummarySection('تفاصيل المستورد', [
-            _buildSummaryItem('اسم المستورد:', certificate.targetName),
+          _buildSummarySection('تفاصيل المستورد'.tr(language ?? 'ar'), [
+            _buildSummaryItem(
+              'اسم المستورد'.tr(language ?? 'ar'),
+              certificate.targetName,
+            ),
             if (targetCountry != null)
-              _buildSummaryItem('البلد المستورد:', targetCountry!),
-            _buildSummaryItem('عنوان المستورد:', certificate.targetAddress),
+              _buildSummaryItem(
+                'البلد المستورد'.tr(language ?? 'ar'),
+                targetCountry!,
+              ),
+            _buildSummaryItem(
+              'عنوان المستورد'.tr(language ?? 'ar'),
+              certificate.targetAddress,
+            ),
           ]),
 
           const SizedBox(height: 24),
@@ -156,7 +189,7 @@ class CertificateDetailsView extends StatelessWidget {
             child: Column(
               children: [
                 Text(
-                  'الفاتورة',
+                  'الفاتورة'.tr(language ?? 'ar'),
                   style: TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
@@ -168,7 +201,7 @@ class CertificateDetailsView extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      'نوع الفاتورة:',
+                      'نوع الفاتورة'.tr(language ?? 'ar'),
                       style: TextStyle(fontWeight: FontWeight.w500),
                     ),
                     Text(
@@ -185,7 +218,7 @@ class CertificateDetailsView extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text(
-                              'المبلغ:',
+                              'المبلغ'.tr(language ?? 'ar'),
                               style: TextStyle(fontWeight: FontWeight.w500),
                             ),
                             Text(
@@ -206,7 +239,7 @@ class CertificateDetailsView extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      'المجموع:',
+                      'المجموع'.tr(language ?? 'ar'),
                       style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
@@ -242,14 +275,17 @@ class CertificateDetailsView extends StatelessWidget {
     final sourceAddress = lang == 'A'
         ? _profileCubit.state.userData?.tajerComplement.jobAddressA ?? ''
         : _profileCubit.state.userData?.tajerComplement.jobAddressE ?? '';
-    return _buildSummarySection('تفاصيل المصدر', [
+    return _buildSummarySection('تفاصيل المصدر'.tr(language ?? 'ar'), [
       _buildSummaryItem(
-        'رقم الاضبارة:',
+        'رقم الاضبارة'.tr(language ?? 'ar'),
         _profileCubit.state.userData?.tajerComplement.azbaraNum ?? '',
       ),
-      _buildSummaryItem('الاسم التجاري:', tradeName),
-      _buildSummaryItem('المدير المفوض:', authorizedManager),
-      _buildSummaryItem('عنوان المصدر:', sourceAddress),
+      _buildSummaryItem('الاسم التجاري'.tr(language ?? 'ar'), tradeName),
+      _buildSummaryItem(
+        'المدير المفوض'.tr(language ?? 'ar'),
+        authorizedManager,
+      ),
+      _buildSummaryItem('عنوان المصدر'.tr(language ?? 'ar'), sourceAddress),
     ]);
   }
 
@@ -315,10 +351,16 @@ class CertificateDetailsView extends StatelessWidget {
 }
 
 class PaymentButton extends StatelessWidget {
-  const PaymentButton({super.key, required this.certificate, this.onSuccess});
+  const PaymentButton({
+    super.key,
+    required this.certificate,
+    this.onSuccess,
+    this.title,
+  });
 
   final CertifecateDataItem certificate;
   final Function()? onSuccess;
+  final String? title;
   @override
   Widget build(BuildContext context) {
     return BlocListener<PaymentCubit, PaymentState>(
@@ -361,7 +403,7 @@ class PaymentButton extends StatelessWidget {
               icon: state.remoteStatus == RemoteDataState.loading
                   ? CircularProgressIndicator.adaptive()
                   : const Icon(Icons.payment),
-              label: Text(' دفع الطلب'),
+              label: Text(title ?? ' دفع الطلب'),
             ),
           );
         },
@@ -372,8 +414,11 @@ class PaymentButton extends StatelessWidget {
   _goPayment(String url) async {
     final res = await navigatorKey.currentState?.push(
       MaterialPageRoute(
-        builder: (context) =>
-            PaymentInAppWebViewScreen(url: url, title: 'دفع الطلب'),
+        builder: (context) => PaymentInAppWebViewScreen(
+          url: url,
+          title: 'دفع الطلب',
+          isPopWhenFinished: true,
+        ),
       ),
     );
     if (res == true) {

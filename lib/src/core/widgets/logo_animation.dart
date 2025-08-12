@@ -36,16 +36,17 @@ class _LogoAnimationState extends State<LogoAnimation>
     );
   }
 
-  // @override
-  // void dispose() {
-  //   _shimmerController.dispose();
-  //   _shimmerController.dispose();
-  //   _logoController.dispose();
-  //   super.dispose();
-  // }
+  @override
+  void dispose() {
+    _shimmerController.dispose();
+    _shimmerController.dispose();
+    _logoController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     final colorScheme = Theme.of(context).colorScheme;
     final expressiveShimmer = colorScheme.onPrimary;
     return AnimatedBuilder(

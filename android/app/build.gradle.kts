@@ -1,3 +1,11 @@
+
+import java.io.FileInputStream
+import java.util.Properties
+val keystorePropertiesFile = rootProject.file("key.properties")
+val keystoreProperties = Properties()
+if (keystorePropertiesFile.exists()) {
+    keystoreProperties.load(FileInputStream(keystorePropertiesFile))
+}
 plugins {
     id("com.android.application")
     id("kotlin-android")
@@ -8,7 +16,7 @@ plugins {
 android {
     namespace = "com.tejara.mechante"
     compileSdk = flutter.compileSdkVersion
-    ndkVersion = flutter.ndkVersion
+    ndkVersion = "27.0.12077973" // Add this line
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
@@ -29,13 +37,27 @@ android {
         versionCode = flutter.versionCode
         versionName = flutter.versionName
     }
+ signingConfigs {
+        create("release") {
+            val keystorePropertiesFile = rootProject.file("key.properties")
+            val keystoreProperties = Properties().apply {
+                load(keystorePropertiesFile.inputStream())
+            }
 
-    buildTypes {
-        release {
-            // TODO: Add your own signing config for the release build.
-            // Signing with the debug keys for now, so `flutter run --release` works.
-            signingConfig = signingConfigs.getByName("debug")
+            keyAlias = keystoreProperties["keyAlias"] as String?
+            keyPassword = keystoreProperties["keyPassword"] as String?
+            storeFile = keystoreProperties["storeFile"]?.let { file(it as String) }
+            storePassword = keystoreProperties["storePassword"] as String?
         }
+    }
+     buildTypes {
+        getByName("release") {
+           
+            signingConfig = signingConfigs.getByName("release")
+
+        }
+
+    
     }
 }
 

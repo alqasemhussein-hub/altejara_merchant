@@ -9,7 +9,7 @@ extension CertificateMapper on Certificate {
       targetName: targetName,
       sourceCountry: sourceCountry,
       generationDscrp: generationDscrp,
-      notes: notes.isEmpty ? null : notes,
+      notes: (notes?.isEmpty ?? true) ? null : notes,
       detailsDscrp: detailsDscrp,
       detailsTypeDscrp: detailsTypeDscrp,
       wigth: wigth,
@@ -27,7 +27,7 @@ extension CertificateMapper on Certificate {
       amount:
           0, // Certificate doesn't have `amount`, set default or map from elsewhere
       operationId: operationId,
-      wigthDetails: wigthDetails,
+      wigthDetails: wigthDetails ?? '',
       operationName: '', // no field in Certificate, set default or derive
       expDate: regExpireDate, // mapping Certificate.regExpireDate to expDate
       document: null, // no field in Certificate

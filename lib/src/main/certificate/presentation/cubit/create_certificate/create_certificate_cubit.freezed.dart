@@ -14,7 +14,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$CreateCertificateState {
 
- RemoteDataState get state; AddCertifecateResponse? get certificates;
+ RemoteDataState get state; AddCertifecateResponse? get certificates; String? get errorMessage;
 /// Create a copy of CreateCertificateState
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -25,16 +25,16 @@ $CreateCertificateStateCopyWith<CreateCertificateState> get copyWith => _$Create
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is CreateCertificateState&&(identical(other.state, state) || other.state == state)&&(identical(other.certificates, certificates) || other.certificates == certificates));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is CreateCertificateState&&(identical(other.state, state) || other.state == state)&&(identical(other.certificates, certificates) || other.certificates == certificates)&&(identical(other.errorMessage, errorMessage) || other.errorMessage == errorMessage));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,state,certificates);
+int get hashCode => Object.hash(runtimeType,state,certificates,errorMessage);
 
 @override
 String toString() {
-  return 'CreateCertificateState(state: $state, certificates: $certificates)';
+  return 'CreateCertificateState(state: $state, certificates: $certificates, errorMessage: $errorMessage)';
 }
 
 
@@ -45,7 +45,7 @@ abstract mixin class $CreateCertificateStateCopyWith<$Res>  {
   factory $CreateCertificateStateCopyWith(CreateCertificateState value, $Res Function(CreateCertificateState) _then) = _$CreateCertificateStateCopyWithImpl;
 @useResult
 $Res call({
- RemoteDataState state, AddCertifecateResponse? certificates
+ RemoteDataState state, AddCertifecateResponse? certificates, String? errorMessage
 });
 
 
@@ -62,11 +62,12 @@ class _$CreateCertificateStateCopyWithImpl<$Res>
 
 /// Create a copy of CreateCertificateState
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? state = null,Object? certificates = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? state = null,Object? certificates = freezed,Object? errorMessage = freezed,}) {
   return _then(_self.copyWith(
 state: null == state ? _self.state : state // ignore: cast_nullable_to_non_nullable
 as RemoteDataState,certificates: freezed == certificates ? _self.certificates : certificates // ignore: cast_nullable_to_non_nullable
-as AddCertifecateResponse?,
+as AddCertifecateResponse?,errorMessage: freezed == errorMessage ? _self.errorMessage : errorMessage // ignore: cast_nullable_to_non_nullable
+as String?,
   ));
 }
 
@@ -151,10 +152,10 @@ return initial(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function( RemoteDataState state,  AddCertifecateResponse? certificates)?  initial,required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function( RemoteDataState state,  AddCertifecateResponse? certificates,  String? errorMessage)?  initial,required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Initial() when initial != null:
-return initial(_that.state,_that.certificates);case _:
+return initial(_that.state,_that.certificates,_that.errorMessage);case _:
   return orElse();
 
 }
@@ -172,10 +173,10 @@ return initial(_that.state,_that.certificates);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function( RemoteDataState state,  AddCertifecateResponse? certificates)  initial,}) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function( RemoteDataState state,  AddCertifecateResponse? certificates,  String? errorMessage)  initial,}) {final _that = this;
 switch (_that) {
 case _Initial():
-return initial(_that.state,_that.certificates);case _:
+return initial(_that.state,_that.certificates,_that.errorMessage);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -192,10 +193,10 @@ return initial(_that.state,_that.certificates);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function( RemoteDataState state,  AddCertifecateResponse? certificates)?  initial,}) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function( RemoteDataState state,  AddCertifecateResponse? certificates,  String? errorMessage)?  initial,}) {final _that = this;
 switch (_that) {
 case _Initial() when initial != null:
-return initial(_that.state,_that.certificates);case _:
+return initial(_that.state,_that.certificates,_that.errorMessage);case _:
   return null;
 
 }
@@ -207,11 +208,12 @@ return initial(_that.state,_that.certificates);case _:
 
 
 class _Initial implements CreateCertificateState {
-  const _Initial({this.state = RemoteDataState.ideal, this.certificates});
+  const _Initial({this.state = RemoteDataState.ideal, this.certificates, this.errorMessage});
   
 
 @override@JsonKey() final  RemoteDataState state;
 @override final  AddCertifecateResponse? certificates;
+@override final  String? errorMessage;
 
 /// Create a copy of CreateCertificateState
 /// with the given fields replaced by the non-null parameter values.
@@ -223,16 +225,16 @@ _$InitialCopyWith<_Initial> get copyWith => __$InitialCopyWithImpl<_Initial>(thi
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Initial&&(identical(other.state, state) || other.state == state)&&(identical(other.certificates, certificates) || other.certificates == certificates));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Initial&&(identical(other.state, state) || other.state == state)&&(identical(other.certificates, certificates) || other.certificates == certificates)&&(identical(other.errorMessage, errorMessage) || other.errorMessage == errorMessage));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,state,certificates);
+int get hashCode => Object.hash(runtimeType,state,certificates,errorMessage);
 
 @override
 String toString() {
-  return 'CreateCertificateState.initial(state: $state, certificates: $certificates)';
+  return 'CreateCertificateState.initial(state: $state, certificates: $certificates, errorMessage: $errorMessage)';
 }
 
 
@@ -243,7 +245,7 @@ abstract mixin class _$InitialCopyWith<$Res> implements $CreateCertificateStateC
   factory _$InitialCopyWith(_Initial value, $Res Function(_Initial) _then) = __$InitialCopyWithImpl;
 @override @useResult
 $Res call({
- RemoteDataState state, AddCertifecateResponse? certificates
+ RemoteDataState state, AddCertifecateResponse? certificates, String? errorMessage
 });
 
 
@@ -260,11 +262,12 @@ class __$InitialCopyWithImpl<$Res>
 
 /// Create a copy of CreateCertificateState
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? state = null,Object? certificates = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? state = null,Object? certificates = freezed,Object? errorMessage = freezed,}) {
   return _then(_Initial(
 state: null == state ? _self.state : state // ignore: cast_nullable_to_non_nullable
 as RemoteDataState,certificates: freezed == certificates ? _self.certificates : certificates // ignore: cast_nullable_to_non_nullable
-as AddCertifecateResponse?,
+as AddCertifecateResponse?,errorMessage: freezed == errorMessage ? _self.errorMessage : errorMessage // ignore: cast_nullable_to_non_nullable
+as String?,
   ));
 }
 

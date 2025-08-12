@@ -1,6 +1,6 @@
 class ErrorResponseModel {
   final int statusCode;
-  final String reason;
+  final String? reason;
 
   final String? fullErrorText;
 
@@ -17,10 +17,7 @@ class ErrorResponseModel {
         reason: json['key'],
       );
     } catch (e) {
-      return ErrorResponseModel(
-        statusCode: 500,
-        reason: 'server_error',
-      );
+      return ErrorResponseModel(statusCode: 500, reason: 'server_error');
     }
   }
 
@@ -36,94 +33,85 @@ class ErrorResponseModel {
 
 class InvalidToken extends ErrorResponseModel {
   InvalidToken({required super.reason})
-      : super(statusCode: 401, fullErrorText: "JWT_VALIDATE_TOKEN_INVALID");
+    : super(statusCode: 401, fullErrorText: 'JWT_VALIDATE_TOKEN_INVALID');
 }
 
 class ExpireToken extends ErrorResponseModel {
   ExpireToken({required super.reason})
-      : super(statusCode: 401, fullErrorText: "JWT_VALIDATE_TOKEN_EXPIRE");
+    : super(statusCode: 401, fullErrorText: 'JWT_VALIDATE_TOKEN_EXPIRE');
 }
 
 class InternetConnectionError extends ErrorResponseModel {
   InternetConnectionError()
-      : super(
-            statusCode: 404,
-            reason: "internet_error_msg",
-            fullErrorText: "internet_error_msg");
+    : super(
+        statusCode: 404,
+        reason: 'internet_error_msg',
+        fullErrorText: 'internet_error_msg',
+      );
 }
 
 class TooManyRequests extends ErrorResponseModel {
   TooManyRequests({required super.reason})
-      : super(statusCode: 429, fullErrorText: "*_*_*_TOO_MANY_REQUESTS");
+    : super(statusCode: 429, fullErrorText: '*_*_*_TOO_MANY_REQUESTS');
 }
 
 class AppMustUpdateError extends ErrorResponseModel {
   AppMustUpdateError({required super.reason})
-      : super(
-            statusCode: 429, fullErrorText: "APP_UPDATER_UPDATE_APP_REQUIRED");
+    : super(statusCode: 429, fullErrorText: 'APP_UPDATER_UPDATE_APP_REQUIRED');
 }
 
 class RequestBodyTooLargError extends ErrorResponseModel {
   RequestBodyTooLargError({required super.reason})
-      : super(statusCode: 429, fullErrorText: "*_*_*_PAYLOAD_TOO_LARGE");
+    : super(statusCode: 429, fullErrorText: '*_*_*_PAYLOAD_TOO_LARGE');
 }
 
 class OtpInvalidError extends ErrorResponseModel {
   OtpInvalidError({required super.reason})
-      : super(statusCode: 429, fullErrorText: "OTP_*_*_INVALID");
+    : super(statusCode: 429, fullErrorText: 'OTP_*_*_INVALID');
 }
 
 class OtpAleradySent extends ErrorResponseModel {
   OtpAleradySent({required super.reason})
-      : super(statusCode: 429, fullErrorText: "OTP_*_*_CONFLICT");
+    : super(statusCode: 429, fullErrorText: 'OTP_*_*_CONFLICT');
 }
 
 class CredentialsInvalidError extends ErrorResponseModel {
   CredentialsInvalidError({required super.reason})
-      : super(statusCode: 429, fullErrorText: "CREDENTIALS_*_*_INVALID");
+    : super(statusCode: 429, fullErrorText: 'CREDENTIALS_*_*_INVALID');
 }
 
 class PhoneExistError extends ErrorResponseModel {
   PhoneExistError({required super.reason})
-      : super(statusCode: 429, fullErrorText: "PHONE_*_*_EXISTS");
+    : super(statusCode: 429, fullErrorText: 'PHONE_*_*_EXISTS');
 }
 
 class UserInactiveError extends ErrorResponseModel {
   UserInactiveError({required super.reason})
-      : super(statusCode: 429, fullErrorText: "USER_*_*_INACTIVE ");
+    : super(statusCode: 429, fullErrorText: 'USER_*_*_INACTIVE ');
 }
 
 class ServerError extends ErrorResponseModel {
-  ServerError() : super(statusCode: 500, reason: "server_error");
+  ServerError() : super(statusCode: 500, reason: 'server_error');
 }
 
 class InvalidInput extends ErrorResponseModel {
-  InvalidInput({required super.reason})
-      : super(
-          statusCode: 400,
-        );
+  InvalidInput({required super.reason}) : super(statusCode: 400);
 }
 
 class UnAuthorizeError extends ErrorResponseModel {
-  UnAuthorizeError({required super.reason})
-      : super(
-          statusCode: 401,
-        );
+  UnAuthorizeError({required super.reason}) : super(statusCode: 401);
 }
 
 class NotFoundResponse extends ErrorResponseModel {
-  NotFoundResponse({required super.reason})
-      : super(
-          statusCode: 404,
-        );
+  NotFoundResponse({required super.reason}) : super(statusCode: 404);
 }
 
 class NationalBackSideNotAssociatedToFroint extends ErrorResponseModel {
   NationalBackSideNotAssociatedToFroint()
-      : super(
-          statusCode: 404,
-          reason: "NATIONAL_BACK_SIDE_NOT_ASSOCIATED_TO_FROINT",
-        );
+    : super(
+        statusCode: 404,
+        reason: 'NATIONAL_BACK_SIDE_NOT_ASSOCIATED_TO_FROINT',
+      );
 }
 
 

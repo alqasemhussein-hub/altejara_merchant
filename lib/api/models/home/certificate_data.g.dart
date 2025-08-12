@@ -35,7 +35,7 @@ Certificate _$CertificateFromJson(Map<String, dynamic> json) => Certificate(
   targetName: json['TargetName'] as String,
   sourceCountry: json['SourceCountry'] as String,
   generationDscrp: json['GenerationDscrp'] as String,
-  notes: json['Notes'] as String,
+  notes: json['Notes'] as String?,
   detailsDscrp: json['DetailsDscrp'] as String,
   detailsTypeDscrp: json['DetailsTypeDscrp'] as String,
   wigth: json['Wigth'] as String,
@@ -63,7 +63,7 @@ Certificate _$CertificateFromJson(Map<String, dynamic> json) => Certificate(
   itemsClassID: (json['ItemsClassID'] as num).toInt(),
   countryID: (json['CountryID'] as num).toInt(),
   regExpireDate: json['RegExpireDate'] as String,
-  wigthDetails: json['WigthDetails'] as String,
+  wigthDetails: json['WigthDetails'] as String?,
   billDocs: json['BillDocs'],
 );
 

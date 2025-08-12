@@ -5,10 +5,12 @@ import 'package:techara_merchant/src/core/const/variable.dart';
 class PaymentInAppWebViewScreen extends StatefulWidget {
   final String url;
   final String title;
+  final bool isPopWhenFinished;
   const PaymentInAppWebViewScreen({
     super.key,
     required this.url,
     required this.title,
+    required this.isPopWhenFinished,
   });
 
   @override
@@ -81,7 +83,8 @@ class _PaymentInAppWebViewScreenState extends State<PaymentInAppWebViewScreen> {
 
           final urlStr = url.toString();
           status = url.queryParameters['status'] ?? status;
-          if (urlStr.startsWith('https://tajr.gcc.iq')) {
+          if (urlStr.startsWith('https://tajr.gcc.iq') &&
+              widget.isPopWhenFinished) {
             if (status == 'payment_declined') {
               navigatorKey.currentState?.pop(false);
             } else {

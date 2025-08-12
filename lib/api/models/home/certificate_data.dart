@@ -89,7 +89,7 @@ class Certificate {
   @JsonKey(name: 'GenerationDscrp')
   final String generationDscrp;
   @JsonKey(name: 'Notes')
-  final String notes;
+  final String? notes;
   @JsonKey(name: 'DetailsDscrp')
   final String detailsDscrp;
   @JsonKey(name: 'DetailsTypeDscrp')
@@ -145,7 +145,7 @@ class Certificate {
   @JsonKey(name: 'RegExpireDate')
   final String regExpireDate;
   @JsonKey(name: 'WigthDetails')
-  final String wigthDetails;
+  final String? wigthDetails;
   @JsonKey(name: 'BillDocs')
   final dynamic billDocs;
 

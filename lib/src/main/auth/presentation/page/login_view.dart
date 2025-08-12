@@ -31,8 +31,8 @@ class _LoginViewState extends State<LoginView> {
   @override
   void initState() {
     super.initState();
-    _classNumberController.text = 'ع31076';
-    _passwordController.text = '@vytHNTphbqZ';
+    // _classNumberController.text = ع31076;
+    // _passwordController.text = '@vytHNTphbqZ';
     _loginCubit = context.read<LoginCubit>();
   }
 
@@ -174,6 +174,7 @@ class _LoginViewState extends State<LoginView> {
             controller: _passwordController,
             isPasswordVisible: true,
             hintText: 'أدخل كلمة المرور',
+
             onValidate: (value) {
               if (value == null || value.isEmpty) {
                 return 'يرجى إدخال كلمة المرور';

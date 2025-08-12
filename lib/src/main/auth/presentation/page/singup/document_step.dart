@@ -50,6 +50,7 @@ class _Step3DocumentUploadState extends State<Step3DocumentUpload> {
             SizedBox(height: 20),
             // Profile icon
             FileSelectorField(
+              lang: 'ar',
               child: Container(
                 width: 80,
                 height: 80,
@@ -188,6 +189,7 @@ class _Step3DocumentUploadState extends State<Step3DocumentUpload> {
 
   Widget _buildFileUploadField(int index) {
     return FileSelectorField(
+      lang: 'ar',
       label: fileLabels[index],
       onFileSelected: (file) {
         setState(() {
