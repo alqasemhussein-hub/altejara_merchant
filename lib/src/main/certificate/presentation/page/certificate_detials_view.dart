@@ -29,11 +29,11 @@ class CertificateDetailsView extends StatelessWidget {
       child: ListView(
         padding: EdgeInsets.all(16),
         children: [
-          if (certificate.orderNo.isNotEmpty)
+          if (certificate.orderNo!.isNotEmpty)
             Container(
               child: Wrap(
                 children: [
-                  if (certificate.operationId != 4)
+                  if (certificate.state == 0)
                     Container(
                       width: double.infinity,
                       child: PaymentButton(certificate: certificate),
@@ -47,7 +47,7 @@ class CertificateDetailsView extends StatelessWidget {
                             isPopWhenFinished: false,
                             url:
                                 'https://tajr.gcc.iq/orderinvoice/' +
-                                certificate.orderNo,
+                                certificate.orderNo!,
                             title: 'تفاصيل الطلب'.tr(language ?? 'ar'),
                           ),
                         ),
@@ -67,7 +67,7 @@ class CertificateDetailsView extends StatelessWidget {
                                   isPopWhenFinished: false,
                                   url:
                                       'https://tajr.gcc.iq/viewcertificate/' +
-                                      certificate.orderNo,
+                                      (certificate.orderNo ?? '0'),
                                   title: 'عرض الشهادة',
                                 ),
                               ),
@@ -111,19 +111,22 @@ class CertificateDetailsView extends StatelessWidget {
           _buildSummarySection('تفاصيل المادة'.tr(language ?? 'ar'), [
             _buildSummaryItem(
               'تفاصيل الشحن'.tr(language ?? 'ar'),
-              certificate.generationDscrp,
+              certificate.generationDscrp ?? '',
             ),
-            _buildSummaryItem('المنتج وعنوانة كاملة', certificate.productDscrp),
+            _buildSummaryItem(
+              'المنتج وعنوانة كاملة',
+              certificate.productDscrp ?? '',
+            ),
             _buildSummaryItem('بلد المنشأ'.tr(language ?? 'ar'), 'العراق'),
             _buildSummaryItem('المكان'.tr(language ?? 'ar'), 'بغداد'),
             _buildSummaryItem(
               'وصف السلع'.tr(language ?? 'ar'),
-              certificate.detailsDscrp,
+              certificate.detailsDscrp ?? '',
             ),
             // _buildSummaryItem('صنف المادة', 'ملحقات نفطية خفيفة'),
             _buildSummaryItem(
               'نوع التعبئة'.tr(language ?? 'ar'),
-              certificate.detailsTypeDscrp,
+              certificate.detailsTypeDscrp ?? '',
             ),
             _buildSummaryItem(
               'الوزن القائم'.tr(language ?? 'ar'),
@@ -131,7 +134,7 @@ class CertificateDetailsView extends StatelessWidget {
             ),
             _buildSummaryItem(
               'تفاصيل الوزن'.tr(language ?? 'ar'),
-              certificate.wigthDetails,
+              certificate.wigthDetails ?? '',
             ),
             _buildSummaryItem(
               'الملاحظات'.tr(language ?? 'ar'),
@@ -144,7 +147,7 @@ class CertificateDetailsView extends StatelessWidget {
           _buildSummarySection('تفاصيل المستورد'.tr(language ?? 'ar'), [
             _buildSummaryItem(
               'اسم المستورد'.tr(language ?? 'ar'),
-              certificate.targetName,
+              certificate.targetName ?? '',
             ),
             if (targetCountry != null)
               _buildSummaryItem(
@@ -394,7 +397,7 @@ class PaymentButton extends StatelessWidget {
                   : () async {
                       if (state.remoteStatus != RemoteDataState.loaded) {
                         context.read<PaymentCubit>().getPaymentDetails(
-                          orderId: certificate.orderNo,
+                          orderId: certificate.orderNo ?? '0',
                           amount: certificate.amount.toDouble(),
                         );
                         return;
@@ -422,8 +425,8 @@ class PaymentButton extends StatelessWidget {
       ),
     );
     if (res == true) {
-      showSuccessSnackBar('تم الدفع بنجاح');
       onSuccess?.call();
+      showSuccessSnackBar('تم الدفع بنجاح');
     } else {
       showErrorSnackBar('فشل الدفع');
     }

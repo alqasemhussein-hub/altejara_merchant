@@ -106,7 +106,7 @@ class CertificateCard extends StatelessWidget {
                           ),
                           const SizedBox(width: 8),
                           Text(
-                            transaction.orderNo,
+                            transaction.orderNo ?? '',
                             style: TextStyle(
                               color: Colors.black87,
                               fontSize: 16,

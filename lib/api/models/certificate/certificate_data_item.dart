@@ -44,19 +44,19 @@ class CertifecateDataItem {
   @JsonKey(name: 'Id')
   final int id;
   @JsonKey(name: 'ProductDscrp')
-  final String productDscrp;
+  final String? productDscrp;
   @JsonKey(name: 'TargetName')
-  final String targetName;
+  final String? targetName;
   @JsonKey(name: 'SourceCountry')
   final String sourceCountry;
   @JsonKey(name: 'GenerationDscrp')
-  final String generationDscrp;
+  final String? generationDscrp;
   @JsonKey(name: 'Notes')
   final String? notes;
   @JsonKey(name: 'DetailsDscrp')
-  final String detailsDscrp;
+  final String? detailsDscrp;
   @JsonKey(name: 'DetailsTypeDscrp')
-  final String detailsTypeDscrp;
+  final String? detailsTypeDscrp;
   @JsonKey(name: 'Wigth')
   final String wigth;
   @JsonKey(name: 'CertificateNo')
@@ -78,17 +78,17 @@ class CertifecateDataItem {
   @JsonKey(name: 'GoverId')
   final int goverId;
   @JsonKey(name: 'WigthNum')
-  final double wigthNum;
+  final double? wigthNum;
   @JsonKey(name: 'OrderNo')
-  final String orderNo;
+  final String? orderNo;
   @JsonKey(name: 'Amount')
   final int amount;
   @JsonKey(name: 'OperationId')
   final int operationId;
   @JsonKey(name: 'WigthDetails')
-  final String wigthDetails;
+  final String? wigthDetails;
   @JsonKey(name: 'OperationName')
-  final String operationName;
+  final String? operationName;
   @JsonKey(name: 'ExpDate')
   final String expDate;
   @JsonKey(name: 'Document')

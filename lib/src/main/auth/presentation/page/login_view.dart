@@ -4,6 +4,7 @@ import 'package:phosphor_flutter/phosphor_flutter.dart';
 import 'package:techara_merchant/src/core/const/variable.dart';
 import 'package:techara_merchant/src/core/enums/general.dart';
 import 'package:techara_merchant/src/core/snackbar/snackbar.dart';
+import 'package:techara_merchant/src/core/widgets/custom_drop_down.dart';
 import 'package:techara_merchant/src/core/widgets/custom_text_field.dart';
 import 'package:techara_merchant/src/core/widgets/logo_animation.dart';
 import 'package:techara_merchant/src/main/auth/presentation/cubit/login/login_cubit.dart';
@@ -20,7 +21,9 @@ class LoginView extends StatefulWidget {
 }
 
 class _LoginViewState extends State<LoginView> {
-  final TextEditingController _classNumberController = TextEditingController();
+  final TextEditingController _azubaraNumberController =
+      TextEditingController();
+  final TextEditingController _letterController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   late LoginCubit _loginCubit;
@@ -38,7 +41,7 @@ class _LoginViewState extends State<LoginView> {
 
   @override
   void dispose() {
-    _classNumberController.dispose();
+    _azubaraNumberController.dispose();
     _passwordController.dispose();
     super.dispose();
   }
@@ -61,7 +64,9 @@ class _LoginViewState extends State<LoginView> {
               create: (_) => OtpCubit(),
               child: ModernOTPScreen(
                 whatsapp: _selectedOtpType == 'whatsapp',
-                classnumber: _classNumberController.text.trim(),
+                classnumber:
+                    _letterController.text +
+                    _azubaraNumberController.text.trim(),
                 idetifyer: state.idetifyer ?? '',
               ),
             ),
@@ -132,33 +137,68 @@ class _LoginViewState extends State<LoginView> {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         // padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
         children: [
-          Text(
-            'رقم الصنف',
-            style: textTheme.titleMedium?.copyWith(
-              fontWeight: FontWeight.w600,
-              color: colorScheme.onSurface,
-            ),
-          ),
-          const SizedBox(height: 8),
-          CustomTextForm(
-            controller: _classNumberController,
-            hintText: 'أدخل رقم الصنف',
-            onValidate: (value) {
-              if (value == null || value.isEmpty) {
-                return 'يرجى إدخال رقم الصنف';
-              }
-              return null;
-            },
-            suffixWidget: Padding(
-              padding: const EdgeInsets.only(right: 16),
-              child: Icon(
-                PhosphorIcons.cube(),
-                size: 22,
-                color: colorScheme.primary,
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Expanded(
+                flex: 1,
+                child: CustomDropDownField(
+                  label: 'الحرف',
+                  controller: _letterController,
+                  items: arabicLetterArray,
+                  onChanged: (value) {
+                    setState(() {});
+                  },
+                ),
               ),
-            ),
+              SizedBox(width: 12),
+              Expanded(
+                flex: 2,
+                child: CustomTextForm(
+                  controller: _azubaraNumberController,
+                  keyboardType: TextInputType.number,
+                  hintText: 'رقم',
+                  title: 'رقم',
+                  onEdit: (p0) {
+                    if (p0 == null || p0.isEmpty) {
+                      return;
+                    }
+                    _azubaraNumberController.text = filtterTextToNumber(p0);
+                    return null;
+                  },
+                  onValidate: (p0) =>
+                      p0?.isEmpty == true ? 'يرجى إدخال رقم' : null,
+                ),
+              ),
+            ],
           ),
 
+          // Text(
+          //   'رقم الصنف',
+          //   style: textTheme.titleMedium?.copyWith(
+          //     fontWeight: FontWeight.w600,
+          //     color: colorScheme.onSurface,
+          //   ),
+          // ),
+          // const SizedBox(height: 8),
+          // CustomTextForm(
+          //   controller: _classNumberController,
+          //   hintText: 'أدخل رقم الصنف',
+          //   onValidate: (value) {
+          //     if (value == null || value.isEmpty) {
+          //       return 'يرجى إدخال رقم الصنف';
+          //     }
+          //     return null;
+          //   },
+          //   suffixWidget: Padding(
+          //     padding: const EdgeInsets.only(right: 16),
+          //     child: Icon(
+          //       PhosphorIcons.cube(),
+          //       size: 22,
+          //       color: colorScheme.primary,
+          //     ),
+          //   ),
+          // ),
           const SizedBox(height: 12),
 
           // Password Field
@@ -307,7 +347,7 @@ class _LoginViewState extends State<LoginView> {
       return; // Prevent multiple submissions
     }
     if (!_formKey.currentState!.validate()) {
-      showWarningSnackBar('يرجى ملء جميع الحقول المطلوبة');
+      // showWarningSnackBar('يرجى ملء جميع الحقول المطلوبة');
       return;
     }
 
@@ -317,7 +357,8 @@ class _LoginViewState extends State<LoginView> {
     }
 
     _loginCubit.login(
-      classNumber: _classNumberController.text.trim(),
+      classNumber:
+          _letterController.text.trim() + _azubaraNumberController.text.trim(),
       password: _passwordController.text.trim(),
       whatsapp: _selectedOtpType == 'whatsapp',
     );
@@ -361,3 +402,16 @@ void openSheet(BuildContext context, Widget child) {
     },
   );
 }
+
+filtterTextToNumber(String text) {
+  RegExp regex = new RegExp(r'\d+');
+  String numbers = regex
+      .allMatches(text)
+      .map((m) => m.group(0)!)
+      .toList()
+      .join('');
+
+  return numbers;
+}
+
+// The `numbers` list will contain ['2', '15']

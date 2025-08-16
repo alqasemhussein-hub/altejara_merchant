@@ -14,6 +14,7 @@ class CustomTextForm extends StatefulWidget {
     this.enable = true,
     this.maxLines = 1,
     this.title,
+    this.onEdit,
   }) : _controller = controller;
 
   final TextEditingController _controller;
@@ -23,6 +24,8 @@ class CustomTextForm extends StatefulWidget {
   final Widget? suffixWidget;
   final TextInputType? keyboardType;
   final String? Function(String?)? onValidate;
+
+  final String? Function(String?)? onEdit;
   final bool enable;
   final String? title;
   @override
@@ -51,6 +54,7 @@ class _CustomTextFormState extends State<CustomTextForm> {
           obscureText: widget.isPasswordVisible && !_isPasswordVisible,
           enabled: widget.enable,
           readOnly: widget.enable == false,
+          onChanged: widget.onEdit,
           style: getIt<ThemeService>().textTheme.titleMedium,
 
           decoration: InputDecoration(

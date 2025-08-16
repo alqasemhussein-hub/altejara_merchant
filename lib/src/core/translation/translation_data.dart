@@ -75,6 +75,8 @@ final arTrans = {
   'هل أنت متأكد؟': 'هل أنت متأكد؟',
   'قم بدفع مبلغ الشهادة ': 'قم بدفع مبلغ الشهادة ',
   'دفع الطلب': 'دفع الان',
+  'ارسال': 'ارسال',
+  'انهاء': 'انهاء',
 };
 final enTrans = {
   'إنشاء شهادة منشأ': 'Create Certificate of Origin',
@@ -143,4 +145,6 @@ final enTrans = {
   'هل أنت متأكد؟': 'Are you sure?',
   'قم بدفع مبلغ الشهادة ': 'Please pay the certificate fee',
   'دفع الطلب': 'Pay Now',
+  'ارسال': 'Send',
+  'انهاء': 'Finish',
 };

@@ -293,14 +293,18 @@ class _ProfilePageState extends State<ProfilePageView>
                                 _buildInfoItem(
                                   icon: PhosphorIcons.envelope(),
                                   label: 'البريد الإلكتروني',
-                                  value: state.userData?.tajer.email ?? '',
-                                  color: Colors.orange,
+                                  value:
+                                      state.userData?.tajerComplement.email ??
+                                      '',
+                                  color: Colors.blue,
                                   isEmail: true,
                                 ),
                                 _buildInfoItem(
                                   icon: PhosphorIcons.phone(),
                                   label: 'رقم الهاتف',
-                                  value: state.userData?.tajer.email ?? '',
+                                  value:
+                                      state.userData?.tajerComplement.phone ??
+                                      '',
                                   color: Colors.purple,
                                   isPhone: true,
                                 ),
@@ -444,7 +448,7 @@ class _ProfilePageState extends State<ProfilePageView>
                   child: Text(
                     value,
                     style: TextStyle(
-                      fontSize: 16,
+                      fontSize: 12,
                       fontWeight: FontWeight.w600,
                       color: isEmail || isPhone ? color : Colors.black87,
                       decoration: isEmail || isPhone

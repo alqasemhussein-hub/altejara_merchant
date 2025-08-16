@@ -90,6 +90,8 @@ class _CreateCertificateFormViewState extends State<CreateCertificateFormView>
     _createCertificateCubit = context.read<CreateCertificateCubit>();
   }
 
+  bool _isPayment = false;
+
   @override
   void dispose() {
     _pageController.dispose();
@@ -539,7 +541,7 @@ class _CreateCertificateFormViewState extends State<CreateCertificateFormView>
       ),
       child: Row(
         children: [
-          if (_currentStep > 0)
+          if (_currentStep > 0 && !_isPayment)
             Expanded(
               child: OutlinedButton(
                 onPressed: _previousStep,
@@ -567,7 +569,7 @@ class _CreateCertificateFormViewState extends State<CreateCertificateFormView>
             flex: _currentStep == 0 ? 1 : 1,
             child: BlocBuilder<CreateCertificateCubit, CreateCertificateState>(
               builder: (context, state) {
-                return state.state == RemoteDataState.loaded
+                return state.state == RemoteDataState.loaded && !_isPayment
                     ? BlocProvider(
                         create: (context) => PaymentCubit(),
                         child: PaymentButton(
@@ -575,6 +577,9 @@ class _CreateCertificateFormViewState extends State<CreateCertificateFormView>
                             _createCertificateCubit.selectedLanguage.text,
                           ),
                           onSuccess: () {
+                            setState(() {
+                              _isPayment = true;
+                            });
                             Future.delayed(
                               const Duration(milliseconds: 2000),
                               () {
@@ -587,7 +592,9 @@ class _CreateCertificateFormViewState extends State<CreateCertificateFormView>
                         ),
                       )
                     : ElevatedButton.icon(
-                        onPressed: state.state == RemoteDataState.loading
+                        onPressed: _isPayment
+                            ? () => navigatorKey.currentState?.pop()
+                            : state.state == RemoteDataState.loading
                             ? null
                             : _currentStep == _totalSteps - 1
                             ? _submitForm
@@ -603,8 +610,12 @@ class _CreateCertificateFormViewState extends State<CreateCertificateFormView>
                         ),
 
                         label: Text(
-                          _currentStep == _totalSteps - 1
-                              ? 'تأكيد'.tr(
+                          _isPayment
+                              ? 'انهاء'.tr(
+                                  _createCertificateCubit.selectedLanguage.text,
+                                )
+                              : _currentStep == _totalSteps - 1
+                              ? 'ارسال'.tr(
                                   _createCertificateCubit.selectedLanguage.text,
                                 )
                               : _currentStep == 0

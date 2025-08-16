@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:dio/dio.dart';
@@ -28,6 +29,12 @@ class CertificateDatsource {
             pageNumber: page,
             pageSize: pageSize,
           );
+      log(
+        result.data
+            .map((e) => JsonEncoder().convert(e.toJson()))
+            .toList()
+            .toString(),
+      );
       return DataSuccess(result);
     } on DioException catch (e) {
       return DataFailed(
