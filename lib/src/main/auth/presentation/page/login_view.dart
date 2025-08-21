@@ -3,12 +3,14 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 import 'package:techara_merchant/src/core/const/variable.dart';
 import 'package:techara_merchant/src/core/enums/general.dart';
+import 'package:techara_merchant/src/core/extenstion/validation.dart';
 import 'package:techara_merchant/src/core/snackbar/snackbar.dart';
 import 'package:techara_merchant/src/core/widgets/custom_drop_down.dart';
 import 'package:techara_merchant/src/core/widgets/custom_text_field.dart';
 import 'package:techara_merchant/src/core/widgets/logo_animation.dart';
 import 'package:techara_merchant/src/main/auth/presentation/cubit/login/login_cubit.dart';
 import 'package:techara_merchant/src/main/auth/presentation/cubit/otp_login/otp_bloc.dart';
+import 'package:techara_merchant/src/main/auth/presentation/page/forget_password/forget_password_page.dart';
 import 'package:techara_merchant/src/main/auth/presentation/page/otp_view.dart';
 import 'package:techara_merchant/src/main/auth/presentation/page/singup/signup_page.dart';
 import 'package:techara_merchant/src/main/auth/presentation/widget/login_button.dart';
@@ -229,11 +231,26 @@ class _LoginViewState extends State<LoginView> {
 
           // const SizedBox(height:12),
           LoginButton(onPressed: _handleLogin),
-          TextButton(
-            onPressed: () => navigatorKey.currentState!.push(
-              MaterialPageRoute(builder: (_) => const SignUpPage()),
-            ),
-            child: Text('إنشاء حساب جديد', textAlign: TextAlign.center),
+          Row(
+            children: [
+              TextButton(
+                onPressed: () => navigatorKey.currentState!.push(
+                  MaterialPageRoute(builder: (_) => const SignUpPage()),
+                ),
+                child: Text('إنشاء حساب جديد', textAlign: TextAlign.center),
+              ),
+              Text('/'),
+              TextButton(
+                onPressed: () => navigatorKey.currentState!.push(
+                  MaterialPageRoute(builder: (_) => const ForgetPasswordPage()),
+                ),
+                child: Text(
+                  'نسيت كلمة المرور؟',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(color: colorScheme.error),
+                ),
+              ),
+            ],
           ),
         ],
       ),
@@ -365,7 +382,7 @@ class _LoginViewState extends State<LoginView> {
   }
 }
 
-void openSheet(BuildContext context, Widget child) {
+void openSheet(BuildContext context, Widget child, [double? initialHeight]) {
   showModalBottomSheet(
     context: context,
     isScrollControlled: true, // important for keyboard resize
@@ -379,7 +396,9 @@ void openSheet(BuildContext context, Widget child) {
         builder: (context, constraints) {
           final keyboardHeight = MediaQuery.of(context).viewInsets.bottom;
           // If keyboard is visible, start bigger
-          final initialSize = keyboardHeight > 0 ? 0.95 : 0.6;
+          final initialSize = keyboardHeight > 0
+              ? 0.95
+              : (initialHeight ?? 0.6);
 
           return DraggableScrollableSheet(
             expand: false,
@@ -387,7 +406,7 @@ void openSheet(BuildContext context, Widget child) {
             minChildSize: 0.2,
             maxChildSize: 0.95,
             snap: true,
-            snapSizes: const [0.6, 0.95],
+            snapSizes: [(initialHeight ?? 0.6), 0.95],
 
             builder: (context, scrollController) {
               return Padding(
@@ -401,17 +420,6 @@ void openSheet(BuildContext context, Widget child) {
       );
     },
   );
-}
-
-filtterTextToNumber(String text) {
-  RegExp regex = new RegExp(r'\d+');
-  String numbers = regex
-      .allMatches(text)
-      .map((m) => m.group(0)!)
-      .toList()
-      .join('');
-
-  return numbers;
 }
 
 // The `numbers` list will contain ['2', '15']

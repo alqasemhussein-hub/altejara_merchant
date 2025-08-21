@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:techara_merchant/api/export.dart';
+import 'package:techara_merchant/src/core/const/variable.dart';
 import 'package:techara_merchant/src/core/enums/general.dart';
 import 'package:techara_merchant/src/core/snackbar/snackbar.dart';
 import 'package:techara_merchant/src/main/auth/presentation/cubit/otp_login/otp_bloc.dart';
@@ -21,6 +22,7 @@ class SignUpView extends StatefulWidget {
 
 class _SignUpViewState extends State<SignUpView> {
   int currentStep = 0;
+  bool isSheetShow = false;
   PageController pageController = PageController();
 
   // Controllers for form data
@@ -66,6 +68,7 @@ class _SignUpViewState extends State<SignUpView> {
   }
 
   void _sendOrder() {
+    context.read<OtpCubit>().setLoading(RemoteDataState.loading);
     context.read<RegisterCubit>().submitData(
       UserOrderForm(
         azbaraNum: letterController.text + classNumberController.text,
@@ -77,7 +80,10 @@ class _SignUpViewState extends State<SignUpView> {
         jobAdressE: workAddressEnglishController.text,
         address: residentialAddressController.text,
         documents: context.read<UploadFileCubit>().state.otherFilePath,
-        image: context.read<UploadFileCubit>().state.uploadFileResponse!,
+        image: context
+            .read<UploadFileCubit>()
+            .state
+            .uploadCertificateFileResponse!,
         password: '',
         goveId: 3,
       ),
@@ -107,16 +113,34 @@ class _SignUpViewState extends State<SignUpView> {
           handleError(state.errorMessage);
         }
         if (state.remoteDataState == RemoteDataState.loaded) {
-          openSheet(
-            context,
-            BlocProvider.value(
-              value: context.read<OtpCubit>(),
-              child: SignUpOtp(
-                email: emailController.text.trim(),
-                onResend: () => _sendOrder(),
+          context.read<OtpCubit>().setLoading(RemoteDataState.subSuccess);
+          if (!isSheetShow) {
+            openSheet(
+              context,
+              BlocProvider.value(
+                value: context.read<OtpCubit>(),
+                child: GeneralOtpVerfityView(
+                  title: 'تأكيد الرمز',
+                  onVerifySuccess: () {
+                    Future.delayed(const Duration(seconds: 2), () {
+                      navigatorKey.currentState?.pop();
+                      navigatorKey.currentState?.pop();
+                    });
+                  },
+
+                  onVerify: (otpCode) {
+                    context.read<OtpCubit>().confirmOtp(
+                      email: emailController.text.trim(),
+                      otpCode: otpCode,
+                    );
+                  },
+                  email: emailController.text.trim(),
+                  onResend: () => _sendOrder(),
+                ),
               ),
-            ),
-          );
+            );
+          }
+          isSheetShow = true;
         }
       },
       builder: (context, state) {
@@ -186,7 +210,12 @@ class _SignUpViewState extends State<SignUpView> {
                     : state.remoteDataState == RemoteDataState.loading &&
                           currentStep == 3
                     ? Center(child: CircularProgressIndicator())
-                    : SizedBox(),
+                    : Center(
+                        child: ElevatedButton.icon(
+                          onPressed: () => _sendOrder(),
+                          label: Text('اعادة ارسال الرمز'),
+                        ),
+                      ),
               ],
             ),
           ),

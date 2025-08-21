@@ -70,9 +70,11 @@ class _CreateCertificateFormViewState extends State<CreateCertificateFormView>
 
   late ProfileCubit _profileCubit;
 
-  File? _selectedFile;
+  File? _selectedCertificateFile;
+  File? _selectedClearanceFile;
   late CreateCertificateCubit _createCertificateCubit;
-  String? billDoc;
+  String? _certificateDoc;
+  String? _clearanceDocs;
   @override
   void initState() {
     super.initState();
@@ -147,11 +149,18 @@ class _CreateCertificateFormViewState extends State<CreateCertificateFormView>
         _goNext();
         break;
       case 2:
-        if (_selectedFile == null) {
-          showWarningSnackBar('الرجاء اختيار ملف');
+        if (_selectedCertificateFile == null) {
+          showWarningSnackBar('الرجاء اختيار ملف الفاتورة');
           return;
         }
-        context.read<UploadFileCubit>().uploadFile(_selectedFile!);
+        if (_selectedClearanceFile == null) {
+          showWarningSnackBar('الرجاء اختيار ملف الاجازة');
+          return;
+        }
+        context.read<UploadFileCubit>().uploadFile(
+          _selectedCertificateFile!,
+          _selectedClearanceFile!,
+        );
 
         break;
       case 3:
@@ -216,7 +225,8 @@ class _CreateCertificateFormViewState extends State<CreateCertificateFormView>
               previous.remoteDataState != current.remoteDataState,
           listener: (context, state) {
             if (state.remoteDataState == RemoteDataState.loaded) {
-              billDoc = state.uploadFileResponse;
+              _certificateDoc = state.uploadCertificateFileResponse;
+              _clearanceDocs = state.uploadClearanceDocsFileResponse;
               _goNext();
             } else if (state.remoteDataState == RemoteDataState.error) {
               showErrorSnackBar('حدث خطأ أثناء تحميل الملف');
@@ -296,9 +306,14 @@ class _CreateCertificateFormViewState extends State<CreateCertificateFormView>
                                 _registerCreateDateController,
                             registerExpDateController:
                                 _registerExpDateController,
-                            onFileSelected: (v) {
+                            onCertificateFileSelected: (v) {
                               setState(() {
-                                _selectedFile = v;
+                                _selectedCertificateFile = v;
+                              });
+                            },
+                            onRegisterFileSelected: (v) {
+                              setState(() {
+                                _selectedClearanceFile = v;
                               });
                             },
                           );
@@ -527,49 +542,51 @@ class _CreateCertificateFormViewState extends State<CreateCertificateFormView>
   }
 
   Widget _buildNavigationButtons(ThemeData theme) {
-    return Container(
-      padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.1),
-            blurRadius: 10,
-            offset: const Offset(0, -5),
-          ),
-        ],
-      ),
-      child: Row(
-        children: [
-          if (_currentStep > 0 && !_isPayment)
-            Expanded(
-              child: OutlinedButton(
-                onPressed: _previousStep,
-                style: OutlinedButton.styleFrom(
-                  padding: const EdgeInsets.symmetric(vertical: 16),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  side: BorderSide(color: Colors.grey.shade400),
-                ),
-                child: Text(
-                  'السابق'.tr(_createCertificateCubit.selectedLanguage.text),
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600,
-                    color: Colors.grey.shade700,
-                  ),
-                ),
+    return BlocBuilder<CreateCertificateCubit, CreateCertificateState>(
+      builder: (context, state) {
+        return Container(
+          padding: const EdgeInsets.all(20),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.1),
+                blurRadius: 10,
+                offset: const Offset(0, -5),
               ),
-            ),
+            ],
+          ),
+          child: Row(
+            children: [
+              if (_currentStep > 0 && state.state != RemoteDataState.loaded)
+                Expanded(
+                  child: OutlinedButton(
+                    onPressed: _previousStep,
+                    style: OutlinedButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(vertical: 16),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      side: BorderSide(color: Colors.grey.shade400),
+                    ),
+                    child: Text(
+                      'السابق'.tr(
+                        _createCertificateCubit.selectedLanguage.text,
+                      ),
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                        color: Colors.grey.shade700,
+                      ),
+                    ),
+                  ),
+                ),
 
-          if (_currentStep > 0) const SizedBox(width: 16),
+              if (_currentStep > 0) const SizedBox(width: 16),
 
-          Expanded(
-            flex: _currentStep == 0 ? 1 : 1,
-            child: BlocBuilder<CreateCertificateCubit, CreateCertificateState>(
-              builder: (context, state) {
-                return state.state == RemoteDataState.loaded && !_isPayment
+              Expanded(
+                flex: _currentStep == 0 ? 1 : 1,
+                child: state.state == RemoteDataState.loaded && !_isPayment
                     ? BlocProvider(
                         create: (context) => PaymentCubit(),
                         child: PaymentButton(
@@ -640,23 +657,26 @@ class _CreateCertificateFormViewState extends State<CreateCertificateFormView>
                             ? Icon(PhosphorIcons.check(), size: 20)
                             : Icon(PhosphorIcons.arrowRight(), size: 20),
                         iconAlignment: IconAlignment.end,
-                      );
-              },
-            ),
+                      ),
+              ),
+            ],
           ),
-        ],
-      ),
+        );
+      },
     );
   }
 
   void _submitForm() {
-    if (billDoc == null || billDoc!.isEmpty) {
+    if (_certificateDoc == null ||
+        _certificateDoc!.isEmpty ||
+        _clearanceDocs == null ||
+        _clearanceDocs!.isEmpty) {
       showWarningSnackBar('الرجاء تحميل المستندات المطلوبة');
       return;
     }
     _createCertificateCubit.createFormSubmit(
       AddCertifecateRequest(
-        serviceId: '1',
+        serviceId: 1,
         lang: _createCertificateCubit.selectedLanguage.text == 'English'
             ? 'E'
             : 'A',
@@ -665,20 +685,22 @@ class _CreateCertificateFormViewState extends State<CreateCertificateFormView>
         regDate: _registerCreateDateController.text,
         regNo: _registerNumberController.text,
         expDate: _registerExpDateController.text,
-        countryID: _getCountryId(),
+        countryID: int.tryParse(_getCountryId()) ?? 0,
         countryName: importerCountryController.text,
         targetName: importerNameController.text,
         targetAddress: _sourceAddressController.text,
-        itemsClassID: _getItemsClassId(),
+        itemsClassID: int.tryParse(_getItemsClassId()) ?? 0,
         generationDscrp: shipmentTypeController.text,
         productDscrp: productTypeController.text,
         detailsDscrp: itemDescriptionController.text,
         detailsTypeDscrp: fillTypeController.text,
-        wigthNum: quantityController.text,
+        wigthNum: int.tryParse(quantityController.text) ?? 0,
         wigth: quantityTypeController.text,
         wigthDetails: quantityDetailsController.text,
         notes: notesController.text,
-        billDocs: billDoc!,
+        billDocs: _certificateDoc!,
+
+        clearanceDocs: _clearanceDocs!,
       ),
     );
   }

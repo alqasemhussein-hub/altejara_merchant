@@ -34,9 +34,9 @@ class TajerModel {
   @JsonKey(name: 'Email')
   final dynamic email;
   @JsonKey(name: 'AName')
-  final String aName;
+  final String? aName;
   @JsonKey(name: 'EName')
-  final String eName;
+  final String? eName;
   @JsonKey(name: 'AzbaraNumber')
   final String azbaraNumber;
   @JsonKey(name: 'PhoneNumber')
@@ -44,9 +44,9 @@ class TajerModel {
   @JsonKey(name: 'MerchentID')
   final String merchentID;
   @JsonKey(name: 'ArTitle')
-  final String arTitle;
+  final String? arTitle;
   @JsonKey(name: 'Title')
-  final String title;
+  final String? title;
   @JsonKey(name: 'ActivityA')
   final String activityA;
   @JsonKey(name: 'ActivityE')

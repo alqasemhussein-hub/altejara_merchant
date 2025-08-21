@@ -168,13 +168,15 @@ class _Step3DocumentUploadState extends State<Step3DocumentUpload> {
                             borderRadius: BorderRadius.circular(8),
                           ),
                         ),
-                        child: Text(
-                          'التالي',
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
+                        child: state.remoteDataState == RemoteDataState.loading
+                            ? CircularProgressIndicator()
+                            : Text(
+                                'التالي',
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
                       );
                     },
                   ),

@@ -62,4 +62,16 @@ class LocalDatabase {
     }
     return Verify2FaResponse.fromJson(data);
   }
+
+  static Future<void> saveToken(String s) {
+    return saveData('auth_token_key', s);
+  }
+
+  static String? getToken() {
+    final data = getData<String?>('auth_token_key');
+    if (data == null) {
+      return null;
+    }
+    return data;
+  }
 }

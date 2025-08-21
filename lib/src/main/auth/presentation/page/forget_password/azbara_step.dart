@@ -2,20 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:techara_merchant/src/core/const/variable.dart';
 import 'package:techara_merchant/src/core/enums/general.dart';
-import 'package:techara_merchant/src/core/extenstion/validation.dart';
 import 'package:techara_merchant/src/core/widgets/custom_drop_down.dart';
 import 'package:techara_merchant/src/core/widgets/custom_text_field.dart';
-import 'package:techara_merchant/src/main/auth/presentation/cubit/register/register_cubit.dart';
+import 'package:techara_merchant/src/main/auth/presentation/cubit/forget_password/forget_password_cubit.dart';
 
 class AzbaraStep extends StatefulWidget {
   final TextEditingController classNumberController;
   final TextEditingController letterController;
-  final VoidCallback onNext;
 
   AzbaraStep({
     required this.classNumberController,
     required this.letterController,
-    required this.onNext,
   });
 
   @override
@@ -38,16 +35,6 @@ class _AzbaraStepState extends State<AzbaraStep> {
             Expanded(
               child: ListView(
                 children: [
-                  Text(
-                    'واجهة التحقق',
-                    style: textTheme.headlineMedium?.copyWith(
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black87,
-                    ),
-                    textAlign: TextAlign.center,
-                  ),
-                  SizedBox(height: 20),
-
                   Text(
                     'قم بإدخال رقم الصنف',
                     style: textTheme.titleLarge?.copyWith(
@@ -91,14 +78,6 @@ class _AzbaraStepState extends State<AzbaraStep> {
                           title: 'رقم',
                           onValidate: (p0) =>
                               p0?.isEmpty == true ? 'يرجى إدخال رقم' : null,
-                          onEdit: (p0) {
-                            if (p0 == null || p0.isEmpty) {
-                              return;
-                            }
-                            widget.classNumberController.text =
-                                filtterTextToNumber(p0);
-                            return null;
-                          },
                         ),
                       ),
                     ],
@@ -110,7 +89,7 @@ class _AzbaraStepState extends State<AzbaraStep> {
               ),
             ),
 
-            BlocBuilder<RegisterCubit, RegisterState>(
+            BlocBuilder<ForgetPasswordCubit, ForgetPasswordState>(
               builder: (context, state) {
                 return SizedBox(
                   width: double.infinity,
@@ -119,10 +98,10 @@ class _AzbaraStepState extends State<AzbaraStep> {
                         ? null
                         : () {
                             if (_formKey.currentState?.validate() ?? false) {
-                              context.read<RegisterCubit>().checkClassNumber(
-                                widget.letterController.text +
-                                    widget.classNumberController.text,
-                              );
+                              // context.read<ForgetPasswordCubit>().checkClassNumber(
+                              //   widget.letterController.text +
+                              //       widget.classNumberController.text,
+                              // );
                             }
                           },
                     style: ElevatedButton.styleFrom(

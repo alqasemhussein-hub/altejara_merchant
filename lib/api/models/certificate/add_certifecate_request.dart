@@ -26,6 +26,8 @@ class AddCertifecateRequest {
     required this.targetAddress,
     required this.countryID,
     required this.countryName,
+    this.clearanceDocs,
+    this.clearanceNo,
   });
 
   factory AddCertifecateRequest.fromJson(Map<String, Object?> json) =>
@@ -56,23 +58,27 @@ class AddCertifecateRequest {
   @JsonKey(name: 'Wigth')
   final String wigth;
   @JsonKey(name: 'WigthNum')
-  final String wigthNum;
+  final int wigthNum;
   @JsonKey(name: 'WigthDetails')
   final String wigthDetails;
   @JsonKey(name: 'Notes')
   final String notes;
   @JsonKey(name: 'ServiceId')
-  final String serviceId;
+  final int serviceId;
   @JsonKey(name: 'ItemsClassID')
-  final String itemsClassID;
+  final int itemsClassID;
   @JsonKey(name: 'TargetName')
   final String targetName;
   @JsonKey(name: 'TargetAddress')
   final String targetAddress;
   @JsonKey(name: 'CountryID')
-  final String countryID;
+  final int countryID;
   @JsonKey(name: 'CountryName')
   final String countryName;
+  @JsonKey(name: 'ClearanceDocs')
+  final String? clearanceDocs;
+  @JsonKey(name: 'ClearanceNo')
+  final String? clearanceNo;
 
   Map<String, Object?> toJson() => _$AddCertifecateRequestToJson(this);
 }

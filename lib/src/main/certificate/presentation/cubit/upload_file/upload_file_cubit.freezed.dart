@@ -14,7 +14,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$UploadFileState {
 
- RemoteDataState get remoteDataState; String? get uploadFileResponse; String? get otherFilePath;
+ RemoteDataState get remoteDataState; String? get uploadCertificateFileResponse; String? get uploadClearanceDocsFileResponse; String? get otherFilePath;
 /// Create a copy of UploadFileState
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -25,16 +25,16 @@ $UploadFileStateCopyWith<UploadFileState> get copyWith => _$UploadFileStateCopyW
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is UploadFileState&&(identical(other.remoteDataState, remoteDataState) || other.remoteDataState == remoteDataState)&&(identical(other.uploadFileResponse, uploadFileResponse) || other.uploadFileResponse == uploadFileResponse)&&(identical(other.otherFilePath, otherFilePath) || other.otherFilePath == otherFilePath));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is UploadFileState&&(identical(other.remoteDataState, remoteDataState) || other.remoteDataState == remoteDataState)&&(identical(other.uploadCertificateFileResponse, uploadCertificateFileResponse) || other.uploadCertificateFileResponse == uploadCertificateFileResponse)&&(identical(other.uploadClearanceDocsFileResponse, uploadClearanceDocsFileResponse) || other.uploadClearanceDocsFileResponse == uploadClearanceDocsFileResponse)&&(identical(other.otherFilePath, otherFilePath) || other.otherFilePath == otherFilePath));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,remoteDataState,uploadFileResponse,otherFilePath);
+int get hashCode => Object.hash(runtimeType,remoteDataState,uploadCertificateFileResponse,uploadClearanceDocsFileResponse,otherFilePath);
 
 @override
 String toString() {
-  return 'UploadFileState(remoteDataState: $remoteDataState, uploadFileResponse: $uploadFileResponse, otherFilePath: $otherFilePath)';
+  return 'UploadFileState(remoteDataState: $remoteDataState, uploadCertificateFileResponse: $uploadCertificateFileResponse, uploadClearanceDocsFileResponse: $uploadClearanceDocsFileResponse, otherFilePath: $otherFilePath)';
 }
 
 
@@ -45,7 +45,7 @@ abstract mixin class $UploadFileStateCopyWith<$Res>  {
   factory $UploadFileStateCopyWith(UploadFileState value, $Res Function(UploadFileState) _then) = _$UploadFileStateCopyWithImpl;
 @useResult
 $Res call({
- RemoteDataState remoteDataState, String? uploadFileResponse, String? otherFilePath
+ RemoteDataState remoteDataState, String? uploadCertificateFileResponse, String? uploadClearanceDocsFileResponse, String? otherFilePath
 });
 
 
@@ -62,10 +62,11 @@ class _$UploadFileStateCopyWithImpl<$Res>
 
 /// Create a copy of UploadFileState
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? remoteDataState = null,Object? uploadFileResponse = freezed,Object? otherFilePath = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? remoteDataState = null,Object? uploadCertificateFileResponse = freezed,Object? uploadClearanceDocsFileResponse = freezed,Object? otherFilePath = freezed,}) {
   return _then(_self.copyWith(
 remoteDataState: null == remoteDataState ? _self.remoteDataState : remoteDataState // ignore: cast_nullable_to_non_nullable
-as RemoteDataState,uploadFileResponse: freezed == uploadFileResponse ? _self.uploadFileResponse : uploadFileResponse // ignore: cast_nullable_to_non_nullable
+as RemoteDataState,uploadCertificateFileResponse: freezed == uploadCertificateFileResponse ? _self.uploadCertificateFileResponse : uploadCertificateFileResponse // ignore: cast_nullable_to_non_nullable
+as String?,uploadClearanceDocsFileResponse: freezed == uploadClearanceDocsFileResponse ? _self.uploadClearanceDocsFileResponse : uploadClearanceDocsFileResponse // ignore: cast_nullable_to_non_nullable
 as String?,otherFilePath: freezed == otherFilePath ? _self.otherFilePath : otherFilePath // ignore: cast_nullable_to_non_nullable
 as String?,
   ));
@@ -152,10 +153,10 @@ return initial(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function( RemoteDataState remoteDataState,  String? uploadFileResponse,  String? otherFilePath)?  initial,required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function( RemoteDataState remoteDataState,  String? uploadCertificateFileResponse,  String? uploadClearanceDocsFileResponse,  String? otherFilePath)?  initial,required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Initial() when initial != null:
-return initial(_that.remoteDataState,_that.uploadFileResponse,_that.otherFilePath);case _:
+return initial(_that.remoteDataState,_that.uploadCertificateFileResponse,_that.uploadClearanceDocsFileResponse,_that.otherFilePath);case _:
   return orElse();
 
 }
@@ -173,10 +174,10 @@ return initial(_that.remoteDataState,_that.uploadFileResponse,_that.otherFilePat
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function( RemoteDataState remoteDataState,  String? uploadFileResponse,  String? otherFilePath)  initial,}) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function( RemoteDataState remoteDataState,  String? uploadCertificateFileResponse,  String? uploadClearanceDocsFileResponse,  String? otherFilePath)  initial,}) {final _that = this;
 switch (_that) {
 case _Initial():
-return initial(_that.remoteDataState,_that.uploadFileResponse,_that.otherFilePath);case _:
+return initial(_that.remoteDataState,_that.uploadCertificateFileResponse,_that.uploadClearanceDocsFileResponse,_that.otherFilePath);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -193,10 +194,10 @@ return initial(_that.remoteDataState,_that.uploadFileResponse,_that.otherFilePat
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function( RemoteDataState remoteDataState,  String? uploadFileResponse,  String? otherFilePath)?  initial,}) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function( RemoteDataState remoteDataState,  String? uploadCertificateFileResponse,  String? uploadClearanceDocsFileResponse,  String? otherFilePath)?  initial,}) {final _that = this;
 switch (_that) {
 case _Initial() when initial != null:
-return initial(_that.remoteDataState,_that.uploadFileResponse,_that.otherFilePath);case _:
+return initial(_that.remoteDataState,_that.uploadCertificateFileResponse,_that.uploadClearanceDocsFileResponse,_that.otherFilePath);case _:
   return null;
 
 }
@@ -208,11 +209,12 @@ return initial(_that.remoteDataState,_that.uploadFileResponse,_that.otherFilePat
 
 
 class _Initial implements UploadFileState {
-  const _Initial({this.remoteDataState = RemoteDataState.ideal, this.uploadFileResponse, this.otherFilePath});
+  const _Initial({this.remoteDataState = RemoteDataState.ideal, this.uploadCertificateFileResponse, this.uploadClearanceDocsFileResponse, this.otherFilePath});
   
 
 @override@JsonKey() final  RemoteDataState remoteDataState;
-@override final  String? uploadFileResponse;
+@override final  String? uploadCertificateFileResponse;
+@override final  String? uploadClearanceDocsFileResponse;
 @override final  String? otherFilePath;
 
 /// Create a copy of UploadFileState
@@ -225,16 +227,16 @@ _$InitialCopyWith<_Initial> get copyWith => __$InitialCopyWithImpl<_Initial>(thi
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Initial&&(identical(other.remoteDataState, remoteDataState) || other.remoteDataState == remoteDataState)&&(identical(other.uploadFileResponse, uploadFileResponse) || other.uploadFileResponse == uploadFileResponse)&&(identical(other.otherFilePath, otherFilePath) || other.otherFilePath == otherFilePath));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Initial&&(identical(other.remoteDataState, remoteDataState) || other.remoteDataState == remoteDataState)&&(identical(other.uploadCertificateFileResponse, uploadCertificateFileResponse) || other.uploadCertificateFileResponse == uploadCertificateFileResponse)&&(identical(other.uploadClearanceDocsFileResponse, uploadClearanceDocsFileResponse) || other.uploadClearanceDocsFileResponse == uploadClearanceDocsFileResponse)&&(identical(other.otherFilePath, otherFilePath) || other.otherFilePath == otherFilePath));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,remoteDataState,uploadFileResponse,otherFilePath);
+int get hashCode => Object.hash(runtimeType,remoteDataState,uploadCertificateFileResponse,uploadClearanceDocsFileResponse,otherFilePath);
 
 @override
 String toString() {
-  return 'UploadFileState.initial(remoteDataState: $remoteDataState, uploadFileResponse: $uploadFileResponse, otherFilePath: $otherFilePath)';
+  return 'UploadFileState.initial(remoteDataState: $remoteDataState, uploadCertificateFileResponse: $uploadCertificateFileResponse, uploadClearanceDocsFileResponse: $uploadClearanceDocsFileResponse, otherFilePath: $otherFilePath)';
 }
 
 
@@ -245,7 +247,7 @@ abstract mixin class _$InitialCopyWith<$Res> implements $UploadFileStateCopyWith
   factory _$InitialCopyWith(_Initial value, $Res Function(_Initial) _then) = __$InitialCopyWithImpl;
 @override @useResult
 $Res call({
- RemoteDataState remoteDataState, String? uploadFileResponse, String? otherFilePath
+ RemoteDataState remoteDataState, String? uploadCertificateFileResponse, String? uploadClearanceDocsFileResponse, String? otherFilePath
 });
 
 
@@ -262,10 +264,11 @@ class __$InitialCopyWithImpl<$Res>
 
 /// Create a copy of UploadFileState
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? remoteDataState = null,Object? uploadFileResponse = freezed,Object? otherFilePath = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? remoteDataState = null,Object? uploadCertificateFileResponse = freezed,Object? uploadClearanceDocsFileResponse = freezed,Object? otherFilePath = freezed,}) {
   return _then(_Initial(
 remoteDataState: null == remoteDataState ? _self.remoteDataState : remoteDataState // ignore: cast_nullable_to_non_nullable
-as RemoteDataState,uploadFileResponse: freezed == uploadFileResponse ? _self.uploadFileResponse : uploadFileResponse // ignore: cast_nullable_to_non_nullable
+as RemoteDataState,uploadCertificateFileResponse: freezed == uploadCertificateFileResponse ? _self.uploadCertificateFileResponse : uploadCertificateFileResponse // ignore: cast_nullable_to_non_nullable
+as String?,uploadClearanceDocsFileResponse: freezed == uploadClearanceDocsFileResponse ? _self.uploadClearanceDocsFileResponse : uploadClearanceDocsFileResponse // ignore: cast_nullable_to_non_nullable
 as String?,otherFilePath: freezed == otherFilePath ? _self.otherFilePath : otherFilePath // ignore: cast_nullable_to_non_nullable
 as String?,
   ));

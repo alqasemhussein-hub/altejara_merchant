@@ -27,23 +27,11 @@ void showSuccessSnackBar(String message) {
 void showErrorSnackBar(String message, [BuildContext? context]) {
   DialogHelper.showErrorDialog(
     message: message,
-    navigatorKey.currentContext!,
+    context ?? navigatorKey.currentContext!,
 
     onCancel: () {},
   );
   return;
-  ScaffoldMessenger.of(context ?? navigatorKey.currentContext!).showSnackBar(
-    SnackBar(
-      content: Text(
-        message,
-        style: const TextStyle(fontWeight: FontWeight.w500),
-      ),
-      behavior: SnackBarBehavior.floating,
-      backgroundColor: Colors.red,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-      margin: const EdgeInsets.all(16),
-    ),
-  );
 }
 
 void showWarningSnackBar(String message) {

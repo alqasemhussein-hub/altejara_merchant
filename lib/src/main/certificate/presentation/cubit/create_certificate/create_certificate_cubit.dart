@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:bloc/bloc.dart';
 import 'package:flutter/widgets.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -21,7 +23,7 @@ class CreateCertificateCubit extends Cubit<CreateCertificateState> {
 
   createFormSubmit(AddCertifecateRequest body) {
     emit(state.copyWith(state: RemoteDataState.loading));
-    L.info(msg: body.toJson().toString());
+    L.info(msg: jsonEncode(body.toJson()).toString());
     _certificateDatsource.submitCertificate(body).then((response) {
       if (response is DataSuccess) {
         emit(

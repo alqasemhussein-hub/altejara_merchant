@@ -9,6 +9,8 @@ import 'package:dio/dio.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:retrofit/retrofit.dart';
 import 'package:techara_merchant/api/models/auth/confirm_order_form.dart';
+import 'package:techara_merchant/api/models/auth/resend_code.dart';
+import 'package:techara_merchant/api/models/auth/verify_forget_password.dart';
 import 'package:techara_merchant/api/models/verify_2fa_response.dart';
 
 import '../models/change_password_form.dart';
@@ -64,4 +66,18 @@ abstract class AuthClient {
   Future<ConfirmOrderResponse> postApiAuthConfirmOrder({
     @Body() required ConfirmOrderForm body,
   });
+
+  @POST('/api/auth/forget-password')
+  Future<dynamic> postApiAuthForgetPassword({
+    @Body() required ForgetPasswordQuery body,
+  });
+  @POST('/api/auth/otp-verify')
+  Future<String> veriftForgetPasswordApi({
+    @Body() required VerifyForgetPasswordForm body,
+  });
+  @POST('/api/auth/change-password')
+  Future<bool> changePassword({@Body() required ChangePasswordForm body});
+
+  @POST('/api/auth/resend-code')
+  Future<bool> resendCode({@Body() required ResendCode body});
 }

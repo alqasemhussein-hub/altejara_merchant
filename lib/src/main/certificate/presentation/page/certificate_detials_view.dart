@@ -38,42 +38,24 @@ class CertificateDetailsView extends StatelessWidget {
                       width: double.infinity,
                       child: PaymentButton(certificate: certificate),
                     ),
-                  Padding(
-                    padding: const EdgeInsets.all(4),
-                    child: ElevatedButton(
-                      onPressed: () => navigatorKey.currentState?.push(
-                        MaterialPageRoute(
-                          builder: (context) => PaymentInAppWebViewScreen(
-                            isPopWhenFinished: false,
-                            url:
-                                'https://tajr.gcc.iq/orderinvoice/' +
-                                certificate.orderNo!,
-                            title: 'تفاصيل الطلب'.tr(language ?? 'ar'),
-                          ),
-                        ),
-                      ),
-                      child: Text('عرض الطلب'.tr(language ?? 'ar')),
-                    ),
+
+                  _buildWebViewViewer(
+                    'عرض الطلب',
+                    'https://tajr.gcc.iq/orderinvoice/' + certificate.orderNo!,
+                    certificate.orderNo == null,
                   ),
 
-                  Padding(
-                    padding: const EdgeInsets.all(4),
-                    child: ElevatedButton(
-                      onPressed: certificate.operationId != 3
-                          ? null
-                          : () => navigatorKey.currentState?.push(
-                              MaterialPageRoute(
-                                builder: (context) => PaymentInAppWebViewScreen(
-                                  isPopWhenFinished: false,
-                                  url:
-                                      'https://tajr.gcc.iq/viewcertificate/' +
-                                      (certificate.orderNo ?? '0'),
-                                  title: 'عرض الشهادة',
-                                ),
-                              ),
-                            ),
-                      child: Text('عرض الشهادة'),
-                    ),
+                  _buildWebViewViewer(
+                    'عرض الشهادة',
+                    'https://tajr.gcc.iq/viewcertificate/' +
+                        (certificate.orderNo ?? '0'),
+                    certificate.operationId != 3,
+                  ),
+
+                  _buildWebViewViewer(
+                    'عرض الوثائق',
+                    'https://documents.gcc.iq/' + (certificate.document ?? ''),
+                    certificate.document == null,
                   ),
                 ],
               ),
@@ -162,13 +144,63 @@ class CertificateDetailsView extends StatelessWidget {
 
           const SizedBox(height: 24),
 
-          _priceSection(context),
+          _priceSection(context, certificate.state),
         ],
       ),
     );
   }
 
-  Widget _priceSection(BuildContext context) {
+  Container _buildWebViewViewer(
+    String title,
+    String url, [
+    bool isDisable = false,
+  ]) {
+    return Container(
+      margin: EdgeInsets.symmetric(vertical: 6),
+      padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      decoration: BoxDecoration(
+        color: Colors.blue.shade50,
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(color: Colors.blue.shade200),
+      ),
+      child: Row(
+        children: [
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(title.tr(language ?? 'ar')),
+              if (isDisable)
+                Text(
+                  'غير متاح',
+                  style: TextStyle(
+                    color: Colors.blueGrey,
+                    fontSize: 10,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+            ],
+          ),
+          Spacer(),
+          ElevatedButton(
+            onPressed: isDisable
+                ? null
+                : () => navigatorKey.currentState?.push(
+                    MaterialPageRoute(
+                      builder: (context) => PaymentInAppWebViewScreen(
+                        isPopWhenFinished: false,
+                        url: url,
+                        title: title.tr(language ?? 'ar'),
+                      ),
+                    ),
+                  ),
+            child: Text('عرض'.tr(language ?? 'ar')),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _priceSection(BuildContext context, int isPaied) {
     final _certificatePriceCubit = context.read<CertificatePriceCubit>();
     if (_certificatePriceCubit.state.remoteStatus != RemoteDataState.loaded &&
         _certificatePriceCubit.state.remoteStatus != RemoteDataState.loading) {
@@ -184,59 +216,65 @@ class CertificateDetailsView extends StatelessWidget {
             width: double.infinity,
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
-              color: Colors.green.shade50,
+              color: isPaied == 1 ? Colors.green.shade50 : Colors.red.shade50,
               borderRadius: BorderRadius.circular(12),
-              border: Border.all(color: Colors.green.shade200),
+              border: Border.all(
+                color: isPaied == 1
+                    ? Colors.green.shade200
+                    : Colors.red.shade200,
+              ),
             ),
 
             child: Column(
               children: [
                 Text(
-                  'الفاتورة'.tr(language ?? 'ar'),
+                  isPaied == 1 ? 'المبلغ المدفوع' : 'المبلغ المستحق',
                   style: TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
-                    color: Colors.green.shade700,
+                    color: isPaied == 1
+                        ? Colors.green.shade700
+                        : Colors.red.shade700,
                   ),
                 ),
                 const SizedBox(height: 12),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      'نوع الفاتورة'.tr(language ?? 'ar'),
-                      style: TextStyle(fontWeight: FontWeight.w500),
-                    ),
-                    Text(
-                      state.certificatePrices?.dscrp ?? '',
-                      style: TextStyle(color: Colors.green.shade700),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 8),
-                Column(
-                  children:
-                      state.certificatePrices?.prices.map((price) {
-                        return Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              'المبلغ'.tr(language ?? 'ar'),
-                              style: TextStyle(fontWeight: FontWeight.w500),
-                            ),
-                            Text(
-                              price.amount.toString() + ' د.ع',
-                              style: TextStyle(
-                                color: Colors.green.shade700,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ],
-                        );
-                      }).toList() ??
-                      [],
-                ),
 
+                // Row(
+                //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                //   children: [
+                //     Text(
+                //       'نوع الفاتورة'.tr(language ?? 'ar'),
+                //       style: TextStyle(fontWeight: FontWeight.w500),
+                //     ),
+                //     Text(
+                //       state.certificatePrices?.dscrp ?? '',
+                //       style: TextStyle(color: Colors.green.shade700),
+                //     ),
+                //   ],
+                // ),
+                // const SizedBox(height: 8),
+                // Column(
+                //   children:
+                //       state.certificatePrices?.prices.map((price) {
+                //         return Row(
+                //           mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                //           children: [
+                //             Text(
+                //               'المبلغ'.tr(language ?? 'ar'),
+                //               style: TextStyle(fontWeight: FontWeight.w500),
+                //             ),
+                //             Text(
+                //               price.amount.toString() + ' د.ع',
+                //               style: TextStyle(
+                //                 color: Colors.green.shade700,
+                //                 fontWeight: FontWeight.bold,
+                //               ),
+                //             ),
+                //           ],
+                //         );
+                //       }).toList() ??
+                //       [],
+                // ),
                 const Divider(height: 24),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -249,10 +287,12 @@ class CertificateDetailsView extends StatelessWidget {
                       ),
                     ),
                     Text(
-                      '${(state.certificatePrices?.prices.fold<double>(0.0, (sum, price) => sum + (price.amount ?? 0.0)) ?? 0.0).toInt().toStringAsFixed(2)} د.ع', // Display with 2 decimal places
+                      '${(state.certificatePrices?.prices.fold<double>(0.0, (sum, price) => sum + (price.amount)) ?? 0.0).toInt().toStringAsFixed(2)} د.ع', // Display with 2 decimal places
                       style: TextStyle(
                         fontSize: 16,
-                        color: Colors.green.shade700,
+                        color: isPaied == 1
+                            ? Colors.green.shade700
+                            : Colors.red.shade700,
                         fontWeight: FontWeight.bold,
                       ),
                     ),

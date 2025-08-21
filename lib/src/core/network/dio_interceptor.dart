@@ -11,7 +11,10 @@ class DioInterceptor extends InterceptorsWrapper {
     RequestOptions options,
     RequestInterceptorHandler handler,
   ) async {
-    final token = LocalDatabase.getUserEntity()?.token;
+    String? token = LocalDatabase.getUserEntity()?.token;
+    if (token == null || token.isEmpty) {
+      token = await LocalDatabase.getToken();
+    }
 
     if (token != null && token.isNotEmpty) {
       options.headers['Authorization'] = 'Bearer $token';

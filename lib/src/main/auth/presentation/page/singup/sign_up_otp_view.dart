@@ -3,22 +3,33 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:techara_merchant/src/core/const/variable.dart';
 import 'package:techara_merchant/src/core/enums/general.dart';
+import 'package:techara_merchant/src/core/extenstion/general.dart';
 import 'package:techara_merchant/src/core/snackbar/snackbar.dart';
 import 'package:techara_merchant/src/main/auth/presentation/cubit/otp_login/otp_bloc.dart';
 import 'package:techara_merchant/src/main/auth/presentation/widget/otp_button.dart';
 
-class SignUpOtp extends StatefulWidget {
+class GeneralOtpVerfityView extends StatefulWidget {
   final String email;
   final Function() onResend;
-  const SignUpOtp({super.key, required this.email, required this.onResend});
+  final Function(String otpCode) onVerify;
+  final Function() onVerifySuccess;
+  final String title;
+  const GeneralOtpVerfityView({
+    super.key,
+    required this.email,
+    required this.onResend,
+    required this.onVerify,
+    required this.title,
+    required this.onVerifySuccess,
+  });
 
   @override
-  State<SignUpOtp> createState() => _SignUpOtpState();
+  State<GeneralOtpVerfityView> createState() => _GeneralOtpVerfityViewState();
 }
 
-class _SignUpOtpState extends State<SignUpOtp> with TickerProviderStateMixin {
+class _GeneralOtpVerfityViewState extends State<GeneralOtpVerfityView>
+    with TickerProviderStateMixin {
   final List<TextEditingController> _controllers = List.generate(
     6,
     (index) => TextEditingController(),
@@ -98,7 +109,7 @@ class _SignUpOtpState extends State<SignUpOtp> with TickerProviderStateMixin {
       return;
     }
 
-    _otpBloc.confirmOtp(email: widget.email, otpCode: _otpCode);
+    widget.onVerify(_otpCode);
   }
 
   @override
@@ -114,12 +125,8 @@ class _SignUpOtpState extends State<SignUpOtp> with TickerProviderStateMixin {
         listenWhen: (previous, current) => current.state != previous.state,
         listener: (context, state) {
           if (state.state == RemoteDataState.loaded) {
-            // _pulseController.forward();
+            widget.onVerifySuccess();
             _timer?.cancel();
-            Future.delayed(const Duration(seconds: 2), () {
-              navigatorKey.currentState?.pop();
-              navigatorKey.currentState?.pop();
-            });
           }
           if (state.state == RemoteDataState.subSuccess) {
             if (!_isResendEnabled) return;
@@ -134,9 +141,8 @@ class _SignUpOtpState extends State<SignUpOtp> with TickerProviderStateMixin {
           }
           if (state.state == RemoteDataState.error) {
             showErrorSnackBar(
-              state.errorMessage == 'resend'
-                  ? 'حدث خطأ أثناء إعادة إرسال الرمز. يرجى المحاولة مرة أخرى.'
-                  : 'الرمز غير صحيح. يرجى التحقق من الرمز وإعادة المحاولة.',
+              state.errorMessage ??
+                  'الرمز غير صحيح. يرجى التحقق من الرمز وإعادة المحاولة.',
             );
           }
         },
@@ -145,6 +151,10 @@ class _SignUpOtpState extends State<SignUpOtp> with TickerProviderStateMixin {
             return ListView(
               padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
               children: [
+                // IconButton(
+                //   onPressed: () => Navigator.pop(context),
+                //   icon: Icon(Icons.refresh),
+                // ),
                 // Header Icon
                 Center(
                   child: Container(
@@ -203,10 +213,20 @@ class _SignUpOtpState extends State<SignUpOtp> with TickerProviderStateMixin {
                       ),
                       const SizedBox(height: 10),
                       // Subtitle
+                      // Text(
+                      //   otpState.state == RemoteDataState.loaded
+                      //       ? 'تم التحقق من هويتك بنجاح'
+                      //       : 'أدخل الرمز المرسل إلى البريد الإلكتروني',
+                      //   style: theme.textTheme.bodyLarge?.copyWith(
+                      //     color: Colors.grey[600],
+                      //     height: 1.5,
+                      //   ),
+                      //   textAlign: TextAlign.center,
+                      // ),
                       Text(
                         otpState.state == RemoteDataState.loaded
                             ? 'تم التحقق من هويتك بنجاح'
-                            : 'أدخل الرمز المرسل إلى البريد الإلكتروني',
+                            : 'أدخل الرمز المرسل إلى ${maskContact(widget.email)}',
                         style: theme.textTheme.bodyLarge?.copyWith(
                           color: Colors.grey[600],
                           height: 1.5,
@@ -334,6 +354,7 @@ class _SignUpOtpState extends State<SignUpOtp> with TickerProviderStateMixin {
                   ),
                 ],
                 OtpButton(
+                  title: widget.title,
                   onPressed: () {
                     _verifyOTP();
                   },

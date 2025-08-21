@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:techara_merchant/src/core/extenstion/validation.dart';
 import 'package:techara_merchant/src/core/style/theme/cache_theme.dart';
 import 'package:techara_merchant/src/core/translation/extention.dart';
 import 'package:techara_merchant/src/core/widgets/custom_drop_down.dart';
@@ -149,6 +150,12 @@ class _MetalStepState extends State<MetalStep> {
                 _buildNumberField(
                   label: 'الوزن القائم'.tr(lang),
                   controller: widget.quantityController,
+                  onValidate: (value) {
+                    if (value == null || value.isEmpty) {
+                      return '${'يرجى إدخال'.tr(lang)}${'الوزن القائم'.tr(lang)}';
+                    }
+                    return null;
+                  },
                 ),
 
                 _buildTextField(
@@ -216,6 +223,7 @@ class _MetalStepState extends State<MetalStep> {
     required String label,
     required TextEditingController controller,
     int maxLines = 1,
+    required String? Function(dynamic value) onValidate,
   }) {
     final lang = _createCertificateCubit.selectedLanguage.text;
     return Column(
@@ -231,9 +239,19 @@ class _MetalStepState extends State<MetalStep> {
           controller: controller,
           hintText: '${'أدخل'.tr(lang)} $label',
           keyboardType: TextInputType.number,
+          onEdit: (p0) {
+            if (p0 == null || p0.isEmpty) {
+              return;
+            }
+            controller.text = filtterTextToNumber(p0);
+            return null;
+          },
           onValidate: (value) {
             if (value == null || value.isEmpty) {
               return '${'يرجى إدخال'.tr(lang)} $label';
+            }
+            if (double.tryParse(value) == null) {
+              return '${'يرجى إدخال قيمة صحيحة'.tr(lang)} $label';
             }
             return null;
           },

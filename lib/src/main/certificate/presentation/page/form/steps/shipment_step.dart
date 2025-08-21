@@ -19,7 +19,8 @@ class ShipmentStep extends StatelessWidget {
     required this.registerNumberController,
     required this.registerCreateDateController,
     required this.registerExpDateController,
-    required this.onFileSelected,
+    required this.onCertificateFileSelected,
+    required this.onRegisterFileSelected,
   });
 
   final TextEditingController certificateNumberController;
@@ -27,7 +28,8 @@ class ShipmentStep extends StatelessWidget {
   final TextEditingController registerNumberController;
   final TextEditingController registerCreateDateController;
   final TextEditingController registerExpDateController;
-  final Function(File a)? onFileSelected;
+  final Function(File a)? onCertificateFileSelected;
+  final Function(File a)? onRegisterFileSelected;
   @override
   Widget build(BuildContext context) {
     final lang = context.read<CreateCertificateCubit>().selectedLanguage.text;
@@ -89,8 +91,15 @@ class ShipmentStep extends StatelessWidget {
               const SizedBox(height: 16),
               // File upload
               FileSelectorField(
-                label: 'الفاتورة'.tr(lang),
-                onFileSelected: onFileSelected,
+                label: ' رفع الفاتورة'.tr(lang),
+                onFileSelected: onCertificateFileSelected,
+                lang: lang,
+              ),
+              const SizedBox(height: 16),
+              // File upload
+              FileSelectorField(
+                label: 'رفع الاجازة'.tr(lang),
+                onFileSelected: onRegisterFileSelected,
                 lang: lang,
               ),
             ],
@@ -127,4 +136,39 @@ class ShipmentStep extends StatelessWidget {
       ],
     );
   }
+
+  // _buildTextNumberField({
+  //   required String label,
+  //   required TextEditingController controller,
+  //   required String lang,
+  // }) {
+  //   return Column(
+  //     crossAxisAlignment: CrossAxisAlignment.start,
+  //     children: [
+  //       Text(
+  //         label,
+  //         style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+  //       ),
+  //       const SizedBox(height: 8),
+  //       CustomTextForm(
+  //         controller: controller,
+  //         hintText: '${'أدخل'.tr(lang)} $label',
+  //         keyboardType: TextInputType.number,
+  //         onEdit: (p0) {
+  //           if (p0 == null || p0.isEmpty) {
+  //             return;
+  //           }
+  //           controller.text = filtterTextToNumber(p0);
+  //           return null;
+  //         },
+  //         onValidate: (value) {
+  //           if (value == null || value.isEmpty) {
+  //             return '${'يرجى إدخال'.tr(lang)} $label';
+  //           }
+  //           return null;
+  //         },
+  //       ),
+  //     ],
+  //   );
+  // }
 }

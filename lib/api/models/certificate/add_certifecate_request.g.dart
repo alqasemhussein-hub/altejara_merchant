@@ -21,15 +21,17 @@ AddCertifecateRequest _$AddCertifecateRequestFromJson(
   detailsDscrp: json['DetailsDscrp'] as String,
   detailsTypeDscrp: json['DetailsTypeDscrp'] as String,
   wigth: json['Wigth'] as String,
-  wigthNum: json['WigthNum'] as String,
+  wigthNum: (json['WigthNum'] as num).toInt(),
   wigthDetails: json['WigthDetails'] as String,
   notes: json['Notes'] as String,
-  serviceId: json['ServiceId'] as String,
-  itemsClassID: json['ItemsClassID'] as String,
+  serviceId: (json['ServiceId'] as num).toInt(),
+  itemsClassID: (json['ItemsClassID'] as num).toInt(),
   targetName: json['TargetName'] as String,
   targetAddress: json['TargetAddress'] as String,
-  countryID: json['CountryID'] as String,
+  countryID: (json['CountryID'] as num).toInt(),
   countryName: json['CountryName'] as String,
+  clearanceDocs: json['ClearanceDocs'] as String?,
+  clearanceNo: json['ClearanceNo'] as String?,
 );
 
 Map<String, dynamic> _$AddCertifecateRequestToJson(
@@ -56,4 +58,6 @@ Map<String, dynamic> _$AddCertifecateRequestToJson(
   'TargetAddress': instance.targetAddress,
   'CountryID': instance.countryID,
   'CountryName': instance.countryName,
+  'ClearanceDocs': instance.clearanceDocs,
+  'ClearanceNo': instance.clearanceNo,
 };

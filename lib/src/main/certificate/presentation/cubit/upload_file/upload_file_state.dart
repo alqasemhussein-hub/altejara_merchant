@@ -5,7 +5,8 @@ abstract class UploadFileState with _$UploadFileState {
   const factory UploadFileState.initial({
     @Default(RemoteDataState.ideal) RemoteDataState remoteDataState,
 
-    String? uploadFileResponse,
+    String? uploadCertificateFileResponse,
+    String? uploadClearanceDocsFileResponse,
     String? otherFilePath,
   }) = _Initial;
 }
